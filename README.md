@@ -1,12 +1,12 @@
 # Containment Field
 
+The Containment Field is a collection of Cloud Native Computing Foundation (CNCF) landscape solutions.
+
 ## Definition
 
 A containment field is a barrier or enclosing structure used to prevent the spread or release of hazardous materials or energy.
 
 Science fiction defines a containment field as follows, "A special forcefield that prevents a highly volatile power source, anti-matter engine core, captured Super-Entity, an orb of Pure Energy, etc., from obliterating everything around it in a flash of pure white." <https://tvtropes.org/pmwiki/pmwiki.php/Main/ContainmentField>
-
-The Containment Field is a collection of Cloud Native Computing Foundation landscape solutions.
 
 ### Background
 
