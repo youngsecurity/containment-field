@@ -10,9 +10,7 @@ Science fiction defines a containment field as follows, "A special forcefield th
 
 ### Background
 
-The Containment Field is an Internal Developer Platform. An internal developer platform (IDP) is a set of tools and technologies that an organization uses to manage the development and deployment of software applications within the organization.
-
-The purpose of an IDP is to streamline and automate the software development process, making it more efficient and effective. An IDP typically includes tools for version control, issue tracking, project management, continuous integration and delivery, testing, and deployment. It may also include tools for collaboration and communication among developers, such as chat and video conferencing. Modern IDPs are often cloud-based and may be accessed through a web browser or through dedicated client software. They may also be integrated with external tools and services, such as those provided by third-party vendors.
+The Containment Field is an Internal Developer Platform.
 
 #### What is an Internal Developer Platform?
 
