@@ -11,4 +11,4 @@ systemctl restart systemd-resolved
 docker rm -f pihole
 
 # Setup pihole using specific tag, because the :latest tag does not always pull down the latest version
-docker run -itd -p 81:80 -p 53:53/tcp -p 53:53/udp --name=pihole --net=Transit --ip=10.10.10.5 --restart=unless-stopped -h pihole -e TZ=America/New_York -v etc-pihole:/etc/pihole/ -v etc-dnsmasq.d:/etc/dnsmasq.d/ pihole/pihole:2.11.12
+docker run -itd -p 81:80 -p 53:53/tcp -p 53:53/udp --name=pihole --net=Transit --ip=10.10.10.5 --restart=unless-stopped -h pihole -e TZ=America/New_York -v etc-pihole:/etc/pihole/ -v etc-dnsmasq.d:/etc/dnsmasq.d/ pihole/pihole:2023.02.2
