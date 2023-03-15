@@ -14,7 +14,17 @@ sudo apt -y upgrade
 # There's a bug in the Ubuntu upgrade process, where two packages 
 # need to be upgraded, but they depend on each other and neither 
 # wants to go first. Use the following command to resolve the bug.
-sudo apt --only-upgrade install $packageName
+# sudo apt --only-upgrade install $packageName
+
+###################################################################
+# SSH & PKI Configuration
+# start the ssh-agent
+eval "$(ssh-agent -s)"
+# check for ssh key
+ssh-add -l -E sha256
+# if it doesn't exist, then add it to the ssh-agent
+ssh-add ~/.ssh/id_carl_rsa_2048
+
 
 ###################################################################
 # Ubuntu Firewall (UFW) Configuration
