@@ -7,4 +7,4 @@ docker run -d \
   -v /$XDG_RUNTIME_DIR/docker.sock:/var/run/docker.sock \
   -v ~/.local/share/docker/volumes:/var/lib/docker/volumes \
   -v portainer_data:/data \
-  portainer/portainer-ce:2.17.1
+  portainer/portainer-ce:2.17.0
