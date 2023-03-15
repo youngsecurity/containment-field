@@ -6,4 +6,4 @@ docker run -d \
   --restart=always \
   -v /$XDG_RUNTIME_DIR/docker.sock:/var/run/docker.sock \
   -v ~/.local/share/docker/volumes:/var/lib/docker/volumes \
-  portainer/agent:2.17.1
+  portainer/agent:2.16.2
