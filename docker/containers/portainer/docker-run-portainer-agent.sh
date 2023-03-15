@@ -1,6 +1,6 @@
 #!/bin/sh
 # Setup Portainer Agent using rootless Docker user namespace
-docker run -d \
+docker run -itd \
   -p 9001:9001 \
   --name portainer_agent \
   --restart=always \

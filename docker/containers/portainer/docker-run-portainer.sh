@@ -1,6 +1,6 @@
 #!/bin/sh
 # Setup Portainer on using rootless Docker user namespace
-docker run -d \
+docker run -itd \
   -p 8000:8000 -p 9443:9443 \
   --name=portainer \
   --restart=unless-stopped \
