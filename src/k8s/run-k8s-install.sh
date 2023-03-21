@@ -1,17 +1,36 @@
 #!/bin/sh
-#
-# Install k8s on Ubuntu 22
-# https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
 
+#
+#.SCRIPT NAME: Install k8s on Ubuntu 22
+#.AUTHOR: Joseph Young joe@youngsecurity.net
+#.DATE: 3/20/2023
+#.DOCUMENTATION: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
+#.DESCRIPTION: This script installs k8s on Ubuntu 22
+#.EXAMPLE: ./run-k8s-install.sh <arguments>
+
+# Exit immediately if a command exits with a non-zero status
+set -e
+
+# Define variables
+
+# Define functions
+
+# Main code
+# Notify the user the script has started.
+echo "Starting k8s installation..."
+
+# Call a function
+
+# Do some other things...
 # Update apt package index
 sudo apt update
 
 # Necessary packages that allow the system to securely communicate with web servers using the HTTPS protocol.
 # Here is what each package does:
-# apt-transport-https: Allows the apt package manager to use HTTPS to communicate with repositories.
-# ca-certificates: Provides a list of trusted certificate authorities for the system to verify the authenticity of SSL/TLS certificates.
-# curl: A command-line tool for transferring data from or to a server using various protocols, including HTTP, HTTPS, FTP, etc.
-sudo apt get install -y apt-transport-https ca-certificates curl
+# 1. apt-transport-https: Allows the apt package manager to use HTTPS to communicate with repositories.
+# 2. ca-certificates: Provides a list of trusted certificate authorities for the system to verify the authenticity of SSL/TLS certificates.
+# 3. curl: A command-line tool for transferring data from or to a server using various protocols, including HTTP, HTTPS, FTP, etc.
+sudo apt install -y apt-transport-https ca-certificates curl
 
 # Download the Google Cloud public signing key
 sudo curl -fsSLo /etc/apt/trusted.gpg.d/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
@@ -33,3 +52,5 @@ sudo apt-get update
 sudo apt-get install -y kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
 
+# Notify the user the script has completed.
+echo "k8s installation finish!"
