@@ -1,0 +1,14 @@
+# NOTES.txt file
+{{- $fullName := include "myapp.fullname" . }}
+{{- $svcPort := .Values.service.port }}
+{{- $ingressHost := .Release.Name | lower | printf "%s.%s" $fullName .Release.Namespace | printf "%s-%s" .Release.Name .Release.Namespace }}
+1. Get the application URL by running these commands:
+{{- if eq .Values.service.type "LoadBalancer" }}
+    export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ $fullName }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+{{- else if eq .Values.service.type "NodePort" }}
+    export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ $fullName }})
+    export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
+    echo http://$NODE_IP:$NODE_PORT
+{{- else }}
+    echo http://{{ $ingressHost }}:$NODE_PORT
+{{- end }}
