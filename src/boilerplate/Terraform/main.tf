@@ -15,10 +15,16 @@ variable "aws_access_key" {}
 variable "aws_secret_key" {}
 
 # Define resources
-resource "aws_instance" "example" {
-  ami           = "ami-0c55b159cbfafe1f0"
-  instance_type = "t2.micro"
-}
+#resource "aws_instance" "example" {
+#  ami           = "ami-0c55b159cbfafe1f0"
+#  instance_type = "t2.micro"
+#}
+
+  # Encrypt the root block device
+  ebs_block_device {
+    device_name = "/dev/sda1"
+    encrypted   = true
+  }
 
 # Define outputs
 output "public_ip" {
