@@ -1,12 +1,12 @@
 #!/bin/sh
 
 #
-#.SCRIPT NAME: Install k8s on Ubuntu 22
-#.AUTHOR: Joseph Young joe@youngsecurity.net
-#.DATE: 3/20/2023
-#.DOCUMENTATION: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
-#.DESCRIPTION: This script installs k8s on Ubuntu 22
-#.EXAMPLE: ./run-k8s-install.sh <arguments>
+# .SCRIPT NAME: run-k8s-install.sh
+# .AUTHOR: Joseph Young joe@youngsecurity.net
+# .DATE: 3/20/2023
+# .DOCUMENTATION: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
+# .DESCRIPTION: This script installs k8s on Ubuntu 22
+# .EXAMPLE: ./run-k8s-install.sh <arguments>
 
 # Exit immediately if a command exits with a non-zero status
 set -e

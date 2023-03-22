@@ -6,9 +6,3 @@
 sudo sed -r -i.orig 's/#?DNSStubListener=yes/DNSStubListener=no/g' /etc/systemd/resolved.conf
 sudo sh -c 'rm /etc/resolv.conf && ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf'
 systemctl restart systemd-resolved
-
-# Delete existing pihole
-docker rm -f pihole
-
-# Setup pihole using specific tag, because the :latest tag does not always pull down the latest version
-docker run -itd -p 81:80 -p 53:53/tcp -p 53:53/udp --name=pihole --net=Transit --ip=10.10.10.5 --restart=unless-stopped -h pihole -e TZ=America/New_York -v etc-pihole:/etc/pihole/ -v etc-dnsmasq.d:/etc/dnsmasq.d/ pihole/pihole:2023.02.2

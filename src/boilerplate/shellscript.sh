@@ -1,11 +1,11 @@
 #!/bin/sh
 
-#.SCRIPT NAME: Boilerplate for shell scripts
-#.AUTHOR: Joseph Young <joe@youngsecurity.net>
-#.DATE: 3/20/2023
-#.DOCUMENTATION: 
-#.DESCRIPTION: This is boilerplate for a shell script.
-#.EXAMPLE: ./shellscript.sh <arguments>
+# .SCRIPT NAME: Boilerplate for shell scripts
+# .AUTHOR: Joseph Young <joe@youngsecurity.net>
+# .DATE: 3/20/2023
+# .DOCUMENTATION: 
+# .DESCRIPTION: This is boilerplate for a shell script.
+# .EXAMPLE: ./shellscript.sh <arguments>
 
 # Exit immediately if a command exits with a non-zero status
 set -e
