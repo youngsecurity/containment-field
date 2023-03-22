@@ -53,4 +53,4 @@ sudo apt-get install -y kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
 
 # Notify the user the script has completed.
-echo "k8s installation finish!"
+echo "k8s installation finished!"
