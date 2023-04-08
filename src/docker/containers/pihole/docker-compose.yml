@@ -7,7 +7,7 @@ services:
     image: pihole/pihole:2023.03.1
     hostname: pihole
     networks:
-      Transit:
+      - Transit
     # For DHCP it is recommended to remove these ports and instead add: network_mode: "host"
     ports:
       - "53:53/tcp"
