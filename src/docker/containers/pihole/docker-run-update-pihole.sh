@@ -27,23 +27,24 @@ echo "Pi-hole container removed!"
 echo "Pulling the latest Pi-hole image..."
 # docker pull pihole/pihole:latest
 docker pull pihole/pihole:2023.03.01
+docker-compose up -d
 
 # Note: FTLCONF_LOCAL_IPV4 should be replaced with your external ip.
-docker run -itd \
-    --name pihole \
-    -p 53:53/tcp -p 53:53/udp \
-    -p 81:80 \
-    -e TZ=America/New_York \
-    -v etc-pihole:/etc/pihole/ \
-    -v etc-dnsmasq.d:/etc/dnsmasq.d/ \
-    --dns=127.0.0.1 --dns=8.8.8.8 \
-    --restart=unless-stopped \
-    --hostname pihole \
-    -e VIRTUAL_HOST="pihole" \
-    -e PROXY_LOCATION="pihole" \
-    -e FTLCONF_LOCAL_IPV4="127.0.0.1" \
-    --net=Transit \
-    pihole/pihole:2023.02.2
+# docker run -itd \
+#     --name pihole \
+#     -p 53:53/tcp -p 53:53/udp \
+#     -p 81:80 \
+#     -e TZ=America/New_York \
+#     -v etc-pihole:/etc/pihole/ \
+#     -v etc-dnsmasq.d:/etc/dnsmasq.d/ \
+#     --dns=127.0.0.1 --dns=8.8.8.8 \
+#     --restart=unless-stopped \
+#     --hostname pihole \
+#     -e VIRTUAL_HOST="pihole" \
+#     -e PROXY_LOCATION="pihole" \
+#     -e FTLCONF_LOCAL_IPV4="127.0.0.1" \
+#     --net=Transit \
+#     pihole/pihole:2023.02.2
 
 printf 'Starting up pihole container '
 for i in $(seq 1 20); do
