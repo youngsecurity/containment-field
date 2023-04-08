@@ -19,15 +19,22 @@ set -e
 echo "Starting the script!"
 
 # Delete existing Pi-hole
-echo "Deleting existing Pi-hole..."
-docker rm -f pihole
-echo "Pi-hole container removed!"
+#echo "Deleting existing Pi-hole..."
+#docker rm -f pihole
+#echo "Pi-hole container removed!"
+
+# Shutting down the stack
+echo "Shutting down the stack..."
+docker compose down
 
 # Setup pihole using specific tag, because the :latest tag does not always pull down the latest version
 echo "Pulling the latest Pi-hole image..."
 # docker pull pihole/pihole:latest
 docker pull pihole/pihole:2023.03.1
-docker-compose up -d
+
+# Starting the stack...
+echo "Starting up the stack..."
+docker compose up -d
 
 # Note: FTLCONF_LOCAL_IPV4 should be replaced with your external ip.
 # docker run -itd \
@@ -47,19 +54,19 @@ docker-compose up -d
 #     pihole/pihole:2023.02.2
 
 printf 'Starting up pihole container '
-for i in $(seq 1 20); do
+for i in $(seq 1 30); do
     if [ "$(docker inspect -f "{{.State.Health.Status}}" pihole)" == "healthy" ] ; then
         printf ' OK'
-        #echo -e "\n$(docker logs pihole 2> /dev/null | grep 'password:') for your pi-hole: http://${IP}/admin/"
+        echo -e "\n$(docker logs pihole 2> /dev/null | grep 'password:') for your pi-hole: http://${IP}/admin/"
         exit 0
     else
         sleep 3
         printf '.'
     fi
 
-    if [ $i -eq 20 ] ; then
+    if [ $i -eq 30 ] ; then
         echo -e "\nTimed out waiting for Pi-hole start, consult your container logs for more info (\`docker logs pihole\`)"
-        exit 1
+        #exit 1
     fi
 done;
 

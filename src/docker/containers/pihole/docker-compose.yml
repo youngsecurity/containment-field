@@ -19,8 +19,8 @@ services:
       TZ: "America/New_York"
       VIRTUAL_HOST: "pihole"      
     volumes: # Volumes store your data between container upgrades
-      - "./etc-pihole:/etc/pihole"
-      - "./etc-dnsmasq.d:/etc/dnsmasq.d"
+      - "~/.local/share/docker/volumes/etc-pihole/_data:/etc/pihole"      
+      - "~/.local/share/docker/volumes/etc-dnsmasq.d/_data:/etc/dnsmasq.d"
     #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
     # cap_add:
     # - NET_ADMIN # Required if you are using Pi-hole as your DHCP server, else not needed
