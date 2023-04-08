@@ -28,3 +28,7 @@ services:
       - 127.0.0.1 # Use Pi-Hole as the DNS server for this container
       - 8.8.8.8 # Specify the upstream DNS server as the secondary DNS server for Pi-Hole
     restart: always
+
+networks:
+  Transit:
+    external: true 
