@@ -26,7 +26,7 @@ echo "Pi-hole container removed!"
 # Setup pihole using specific tag, because the :latest tag does not always pull down the latest version
 echo "Pulling the latest Pi-hole image..."
 # docker pull pihole/pihole:latest
-docker pull pihole/pihole:2023.02.2
+docker pull pihole/pihole:2023.03.01
 
 # Note: FTLCONF_LOCAL_IPV4 should be replaced with your external ip.
 docker run -itd \
@@ -49,7 +49,7 @@ printf 'Starting up pihole container '
 for i in $(seq 1 20); do
     if [ "$(docker inspect -f "{{.State.Health.Status}}" pihole)" == "healthy" ] ; then
         printf ' OK'
-        echo -e "\n$(docker logs pihole 2> /dev/null | grep 'password:') for your pi-hole: http://${IP}/admin/"
+        #echo -e "\n$(docker logs pihole 2> /dev/null | grep 'password:') for your pi-hole: http://${IP}/admin/"
         exit 0
     else
         sleep 3
