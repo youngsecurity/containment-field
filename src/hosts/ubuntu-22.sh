@@ -23,7 +23,7 @@ eval "$(ssh-agent -s)"
 # check for ssh key
 ssh-add -l -E sha256
 # if it doesn't exist, then add it to the ssh-agent
-ssh-add ~/.ssh/id_carl_rsa_2048
+ssh-add ~/.ssh/id_carl_rsa_2048.pri
 
 
 ###################################################################
