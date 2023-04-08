@@ -26,7 +26,7 @@ echo "Pi-hole container removed!"
 # Setup pihole using specific tag, because the :latest tag does not always pull down the latest version
 echo "Pulling the latest Pi-hole image..."
 # docker pull pihole/pihole:latest
-docker pull pihole/pihole:2023.03.01
+docker pull pihole/pihole:2023.03.1
 docker-compose up -d
 
 # Note: FTLCONF_LOCAL_IPV4 should be replaced with your external ip.
