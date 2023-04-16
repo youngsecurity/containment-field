@@ -1,12 +1,5 @@
 #!/bin/sh
 
-# sudoers.d setup
-sudo touch /etc/sudoers.d/devusr
-sudo visudo --file=/etc/sudoers.d/devusr
-devusr ALL=(ALL) NOPASSWD:ALL
-# or
-sudo echo "devusr ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/devusr
-
 ###################################################################
 # apt update and upgrade
 sudo apt update
@@ -16,28 +9,7 @@ sudo apt -y upgrade
 # wants to go first. Use the following command to resolve the bug.
 # sudo apt --only-upgrade install $packageName
 
-###################################################################
-# SSH & PKI Configuration
-# start the ssh-agent
-eval "$(ssh-agent -s)"
-# check for ssh key
-ssh-add -l -E sha256
-# if it doesn't exist, then add it to the ssh-agent
-ssh-add ~/.ssh/id_carl_rsa_2048.pri
-
-
-###################################################################
-# Ubuntu Firewall (UFW) Configuration
-# Setup MGMT services whitelist for a dedicated MGMT VLAN
-# Setup DMZ services whitelist for a dedicated DMZ VLAN
-sudo ufw allow from 10.0.0.0/8 to any port 81 # PiHole MGMT
-sudo ufw allow from 10.0.0.0/8 to any port 53 # PiHole DNS
-sudo ufw allow from 10.0.0.0/8 to any port 9001 # portainer agents
-sudo ufw allow from 10.0.255.0/24 to any port 9443 # portainer UI
-sudo ufw allow from 10.0.255.0/24 to any port 8000 # portainer optional for Edge compute
-sudo ufw allow from 10.0.255.0/24 to any port 8080 # nginx dev container
-sudo ufw allow from 10.0.255.0/24 to any port 22 # ssh
-sudo ufw enable
+# The following changes are required for rootless Docker
 
 ###################################################################
 # /etc/sysctl.conf conf required to support rootless docker
