@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	//"strings"
+	"strings"
 )
 
 func main() {
@@ -19,7 +19,7 @@ func main() {
 
 	fmt.Print("Enter your choice (1, 2, or 3): ")
 	input, _ := reader.ReadString('\n')
-	//input = strings.TrimSpace(input) // Remove leading and trailing whitespace
+	input = strings.TrimSpace(input) // Remove leading and trailing whitespace
 
 	switch input {
 	case "1":
