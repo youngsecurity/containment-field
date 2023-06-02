@@ -20,13 +20,13 @@ sudo mkdir -p /etc/sudoers.d
 
 # Create a file in /etc/sudoers.d/ with the user's name
 FILE="/etc/sudoers.d/$USERNAME"
-touch $FILE
+sudo touch $FILE
 
 # Add the necessary permissions to the file
-echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" > $FILE
+sudo echo "$USERNAME ALL=(ALL) NOPASSWD:ALL" > $FILE
 
 # Set the appropriate file permissions
-chmod 0440 $FILE
+sudo chmod 0440 $FILE
 
 # Print a success message
 echo "Sudoers file created for user $USERNAME at $FILE"
