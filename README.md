@@ -10,7 +10,8 @@ Science fiction defines a containment field as follows, "A special forcefield th
 
 ### Background
 
-The Containment Field is an Internal Developer Platform.
+The Containment Field is a cybersecurity hardened hyperconverged infrastructure as code (HCIaC) habitable Internal Developer Platform (IDP). 
+The primary function of the Containment Field is to act as a "special forcefield" around Container Desktop Infrastructure as a Service (CDI) as well as traditional Virtual Desktop Infrastructure (VDI). 
 
 #### What is an Internal Developer Platform?
 
