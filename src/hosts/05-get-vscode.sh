@@ -2,8 +2,9 @@
 
 ################################################################################
 # Script Name: 05-get-vscode.sh
-# Description: This script give the user a choice to install Microsoft VS Code,
+# Description: This script gives the user a choice to install Microsoft VS Code,
 #              VS Code insiders, or exit the script.
+# Example: bash ./05-get-vscode.sh
 # Author: Joseph Young <joe@youngsecurity.net>
 # Created: 2023/06/03
 # Version: 1.0
