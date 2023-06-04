@@ -12,6 +12,19 @@
 # Exit immediately if a command exits with a non-zero status
 set -e
 
+# Define functions
+function install_repo_and_key() {   
+    # Install the repository and key manually with the following:
+    sudo apt-get install wget gpg
+    wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
+    sudo install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg
+    sudo sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
+    rm -f packages.microsoft.gpg
+    # Then update the package cache and install the package using:
+    sudo apt install apt-transport-https
+    sudo apt update    
+}
+
 # Main code
 # Notify the user the script has started.
 echo "Starting the script!"
@@ -25,30 +38,14 @@ read -p "Enter your choice (1, 2, or 3): " choice
 
 # Check the user's choice
 if [ "$choice" = "1" ]; then
-    echo "You chose to install VS Code"
+    echo "You chose to install VS Code"    
     # Add your desired actions for Option 1 here
-    # Install the repository and key manually with the following:
-    sudo apt-get install wget gpg
-    wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
-    sudo install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg
-    sudo sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
-    rm -f packages.microsoft.gpg
-    # Then update the package cache and install the package using:
-    sudo apt install apt-transport-https
-    sudo apt update    
+    install_repo_and_key
     sudo apt install code
 elif [ "$choice" = "2" ]; then
     echo "You chose to install VS Code Insiders"
-    # Add your desired actions for Option 2 here    
-    # Install the repository and key manually with the following:
-    sudo apt-get install wget gpg
-    wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
-    sudo install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg
-    sudo sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
-    rm -f packages.microsoft.gpg
-    # Then update the package cache and install the package using:
-    sudo apt install apt-transport-https
-    sudo apt update    
+    # Add your desired actions for Option 2 here
+    install_repo_and_key
     sudo apt install code-insiders
 elif [ "$choice" = "3" ]; then
     echo "You chose to exit."
