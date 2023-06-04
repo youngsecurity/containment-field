@@ -18,14 +18,14 @@ echo "Starting the script!"
 
 # Prompt the user for a choice
 echo "Please choose an option:"
-echo "1. VS Code"
-echo "2. VS Code Insiders"
+echo "1. Install VS Code"
+echo "2. Install VS Code Insiders"
 echo "3. Exit"
 read -p "Enter your choice (1, 2, or 3): " choice
 
 # Check the user's choice
 if [ "$choice" = "1" ]; then
-    echo "You chose VS Code"
+    echo "You chose to install VS Code"
     # Add your desired actions for Option 1 here
     # Install the repository and key manually with the following:
     sudo apt-get install wget gpg
@@ -38,7 +38,7 @@ if [ "$choice" = "1" ]; then
     sudo apt update    
     sudo apt install code
 elif [ "$choice" = "2" ]; then
-    echo "You chose VS Code Insiders"
+    echo "You chose to install VS Code Insiders"
     # Add your desired actions for Option 2 here    
     # Install the repository and key manually with the following:
     sudo apt-get install wget gpg
@@ -51,7 +51,7 @@ elif [ "$choice" = "2" ]; then
     sudo apt update    
     sudo apt install code-insiders
 elif [ "$choice" = "3" ]; then
-    echo "You chose to Exit."
+    echo "You chose to exit."
     # Add your desired actions for Option 3 here
     exit 0
 else
