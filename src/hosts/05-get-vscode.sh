@@ -2,7 +2,8 @@
 
 ################################################################################
 # Script Name: 05-get-vscode.sh
-# Description: This script installs Microsoft VS Code.
+# Description: This script give the user a choice to install Microsoft VS Code,
+#              VS Code insiders, or exit the script.
 # Author: Joseph Young <joe@youngsecurity.net>
 # Created: 2023/06/03
 # Version: 1.0
@@ -19,7 +20,8 @@ echo "Starting the script!"
 echo "Please choose an option:"
 echo "1. VS Code"
 echo "2. VS Code Insiders"
-read -p "Enter your choice (1 or 2): " choice
+echo "3. Exit"
+read -p "Enter your choice (1, 2, or 3): " choice
 
 # Check the user's choice
 if [ "$choice" = "1" ]; then
@@ -48,8 +50,12 @@ elif [ "$choice" = "2" ]; then
     sudo apt install apt-transport-https
     sudo apt update    
     sudo apt install code-insiders
+elif [ "$choice" = "3" ]; then
+    echo "You chose to Exit."
+    # Add your desired actions for Option 3 here
+    exit 0
 else
-    echo "Invalid choice. Please choose either 1 or 2."
+    echo "Invalid choice. Please choose either 1, 2, or 3."
 fi
 
 # Notify the user the script has completed.
