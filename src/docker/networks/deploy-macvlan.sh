@@ -31,7 +31,7 @@ echo "Starting the script!"
 #echo "Variable 1 is: $VAR1"
 #echo "Variable 2 is: $VAR2"
 
-sudo nmcli dev set enp0s3 promisc on
+sudo nmcli dev set enp3s0 promisc on
 
 docker network create -d macvlan \
   --subnet=10.0.255.0/24 \
