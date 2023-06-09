@@ -17,7 +17,7 @@
 # And that's it! The container should now be running and accessible at http://localhost:8080 in your web browser.
 
 # Base image
-FROM ubuntu:latest
+FROM ubuntu:lunar
 
 # Maintainer information
 LABEL Your Name <your.email@example.com>
