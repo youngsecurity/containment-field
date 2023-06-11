@@ -16,45 +16,43 @@ set -e
 #VAR2="value2"
 
 # Define functions
-#function my_function() {
-#    echo "Hello, world!"
-#}
+function deploy_wolf() {
+  docker run \
+  --name wolf \
+  --network=host \
+  -e XDG_RUNTIME_DIR=/tmp/sockets \
+  -v /tmp/sockets:/tmp/sockets:rw \
+  -e NVIDIA_DRIVER_VOLUME_NAME=nvidia-driver-vol \
+  -v nvidia-driver-vol:/usr/nvidia:rw \
+  -e HOST_APPS_STATE_FOLDER=/etc/wolf \
+  -v /etc/wolf/wolf:/wolf/cfg \
+  -v /var/run/docker.sock:/var/run/docker.sock:rw \
+  --device-cgroup-rule "c 13:* rmw" \
+  --device /dev/nvidia-uvm \
+  --device /dev/nvidia-uvm-tools \
+  --device /dev/dri/ \
+  --device /dev/nvidia-caps/nvidia-cap1 \
+  --device /dev/nvidia-caps/nvidia-cap2 \
+  --device /dev/nvidiactl \
+  --device /dev/nvidia0 \
+  --device /dev/nvidia-modeset \
+  --device /dev/uinput \
+  -v /dev/shm:/dev/shm:rw \
+  -v /dev/input:/dev/input:rw \
+  -v /run/udev:/run/udev:rw \
+  ghcr.io/games-on-whales/wolf:dev-wayland
+}
 
 # Main code
 # Notify the user the script has started.
 echo "Starting the script!"
 
 # Call a function
-#my_function
+deploy_wolf
 
 # Do some other things...
 #echo "Variable 1 is: $VAR1"
 #echo "Variable 2 is: $VAR2"
-
-docker run \
-    --name wolf \
-    --network=macvlan255 \
-    -e XDG_RUNTIME_DIR=/tmp/sockets \
-    -v /tmp/sockets:/tmp/sockets:rw \
-    -e NVIDIA_DRIVER_VOLUME_NAME=nvidia-driver-vol \
-    -v nvidia-driver-vol:/usr/nvidia:rw \
-    -e HOST_APPS_STATE_FOLDER=/etc/wolf \
-    -v /etc/wolf/wolf:/wolf/cfg \
-    -v /var/run/docker.sock:/var/run/docker.sock:rw \
-    --device-cgroup-rule "c 13:* rmw" \
-    --device /dev/nvidia-uvm \
-    --device /dev/nvidia-uvm-tools \
-    --device /dev/dri/ \
-    --device /dev/nvidia-caps/nvidia-cap1 \
-    --device /dev/nvidia-caps/nvidia-cap2 \
-    --device /dev/nvidiactl \
-    --device /dev/nvidia0 \
-    --device /dev/nvidia-modeset \
-    --device /dev/uinput \
-    -v /dev/shm:/dev/shm:rw \
-    -v /dev/input:/dev/input:rw \
-    -v /run/udev:/run/udev:rw \
-    ghcr.io/games-on-whales/wolf:dev-wayland
 
 # Notify the user the script has completed.
 echo "Script has finished!"
