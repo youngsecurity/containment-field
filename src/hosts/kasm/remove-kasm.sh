@@ -27,9 +27,9 @@ function remove_kasm() {
   
   # Check if the command produced the "docker rm requires at least 1 argument" error
   if [[ "$output" == *"docker rm requires at least 1 argument"* ]]; then
-      echo "No session containers to remove."
+    echo "No session containers to remove."
   else
-      echo "Command ran successfully."
+    echo "Command ran successfully."
   fi
 
   # Remove Kasm service containers.

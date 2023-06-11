@@ -67,6 +67,7 @@ Temporary Items
 # .nfs files are created when an open file is removed but is still being accessed
 .nfs*
 
+# Visual Studio Code
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
@@ -481,4 +482,3 @@ FodyWeavers.xsd
 
 # Kasm Workspaces
 src/hosts/kasm/kasm_release/
-.vscode/launch.json

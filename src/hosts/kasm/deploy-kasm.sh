@@ -2,7 +2,7 @@
 
 ################################################################################
 # Script Name: deploy-kasm.sh
-# Description: This is script installs Kasm Workspaces.
+# Description: This script installs Kasm Workspaces.
 # Author: Joseph Young <joe@youngsecurity.net>
 # Created: 2023/06/08
 # Version: 1.0
@@ -16,8 +16,11 @@ set -e
 #VAR2="value2"
 
 # Define functions
-function my_function() {
-  echo "Hello, world!"
+function deploy_kasm() {  
+  cd /tmp
+  curl -O https://kasm-static-content.s3.amazonaws.com/kasm_release_1.13.1.421524.tar.gz
+  tar -xf kasm_release_1.13.1.421524.tar.gz
+  sudo bash kasm_release/install.sh --enable-lossless --proxy-port 8443 -L 443
 }
 
 # Main code
@@ -30,11 +33,6 @@ deploy_kasm
 # Do some other things...
 #echo "Variable 1 is: $VAR1"
 #echo "Variable 2 is: $VAR2"
-
-#curl -O https://kasm-static-content.s3.amazonaws.com/kasm_release_1.13.1.421524.tar.gz
-#tar -xf kasm_release_1.13.1.421524.tar.gz
-sudo bash kasm_release/install.sh --enable-lossless --proxy-port 8443 -L 443
-
 
 # Notify the user the script has completed.
 echo "Script has finished!"
