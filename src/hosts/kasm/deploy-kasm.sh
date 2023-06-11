@@ -33,7 +33,7 @@ echo "Starting the script!"
 
 #curl -O https://kasm-static-content.s3.amazonaws.com/kasm_release_1.13.1.421524.tar.gz
 tar -xf kasm_release_1.13.1.421524.tar.gz
-sudo bash kasm_release/install.sh --enable-lossless --proxy-port 7443 -L 8443
+sudo bash kasm_release/install.sh --enable-lossless --proxy-port 8443 -L 443
 
 
 # Notify the user the script has completed.

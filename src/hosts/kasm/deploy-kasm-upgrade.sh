@@ -34,16 +34,16 @@ function upgrade_kasm() {
   tar -xf kasm_release_1.13.1.421524.tar.gz
 
   # Login to the db server and execute:  
-  sudo bash kasm_release/upgrade.sh --role db --enable-lossless --proxy-port 7443 -L 8443
+  sudo bash kasm_release/upgrade.sh --role db --enable-lossless --proxy-port 8443 -L 443
 
   # Login to the agent server and execute:
-  sudo bash kasm_release/upgrade.sh --role agent --enable-lossless --proxy-port 7443 -L 8443
+  sudo bash kasm_release/upgrade.sh --role agent --enable-lossless --proxy-port 8443 -L 443
 
   # Login to the Web App server and execute:
-  sudo bash kasm_release/upgrade.sh --role app --enable-lossless --proxy-port 7443 -L 8443
+  sudo bash kasm_release/upgrade.sh --role app --enable-lossless --proxy-port 8443 -L 443
 
   # Login to the connection proxy server and execute:
-  sudo bash kasm_release/upgrade.sh --role guac --enable-lossless --proxy-port 7443 -L 8443
+  sudo bash kasm_release/upgrade.sh --role guac --enable-lossless --proxy-port 8443 -L 443
 }
 
 # Main code
