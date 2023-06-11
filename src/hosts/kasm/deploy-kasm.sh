@@ -16,23 +16,23 @@ set -e
 #VAR2="value2"
 
 # Define functions
-#function my_function() {
-#    echo "Hello, world!"
-#}
+function my_function() {
+  echo "Hello, world!"
+}
 
 # Main code
 # Notify the user the script has started.
 echo "Starting the script!"
 
 # Call a function
-#my_function
+deploy_kasm
 
 # Do some other things...
 #echo "Variable 1 is: $VAR1"
 #echo "Variable 2 is: $VAR2"
 
 #curl -O https://kasm-static-content.s3.amazonaws.com/kasm_release_1.13.1.421524.tar.gz
-tar -xf kasm_release_1.13.1.421524.tar.gz
+#tar -xf kasm_release_1.13.1.421524.tar.gz
 sudo bash kasm_release/install.sh --enable-lossless --proxy-port 8443 -L 443
 
 

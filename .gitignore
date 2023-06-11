@@ -481,3 +481,4 @@ FodyWeavers.xsd
 
 # Kasm Workspaces
 src/hosts/kasm/kasm_release/
+.vscode/launch.json
