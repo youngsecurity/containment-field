@@ -17,7 +17,7 @@ set -e
 
 # Define functions
 function deploy_wolf() {
-  docker run \
+docker run \
   --name wolf \
   --network=host \
   -e XDG_RUNTIME_DIR=/tmp/sockets \
