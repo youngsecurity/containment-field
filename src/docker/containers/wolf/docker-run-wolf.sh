@@ -40,7 +40,7 @@ docker run \
   -v /dev/shm:/dev/shm:rw \
   -v /dev/input:/dev/input:rw \
   -v /run/udev:/run/udev:rw \
-  ghcr.io/games-on-whales/wolf:dev-wayland
+  ghcr.io/games-on-whales/wolf:stable
 }
 
 # Main code
