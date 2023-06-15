@@ -2,7 +2,7 @@
 
 ################################################################################
 # Script Name: docker-run-wolf.sh
-# Description: This is script will deploy GoW Wolf
+# Description: This script will deploy GoW Wolf
 # Author: Joseph Young <joe@youngsecurity.net>
 # Created: 2023/06/07
 # Version: 1.0
