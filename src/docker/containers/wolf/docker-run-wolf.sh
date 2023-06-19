@@ -16,10 +16,10 @@ set -e
 #VAR2="value2"
 
 # Define functions
-function deploy_wolf() {
+deploy_wolf() {
 docker run \
   --name wolf \
-  --network=host \
+  --network=macvlan255 \
   -e XDG_RUNTIME_DIR=/tmp/sockets \
   -v /tmp/sockets:/tmp/sockets:rw \
   -e NVIDIA_DRIVER_VOLUME_NAME=nvidia-driver-vol \
