@@ -20,8 +20,8 @@ deploy_wolf() {
     docker run \
         --name wolf \
         --network=host \
-        -e TZ =	America/New_York \
-        -e WOLF_LOG_LEVEL = DEBUG \
+        -e TZ=America/New_York \
+        -e WOLF_LOG_LEVEL=DEBUG \
         -e XDG_RUNTIME_DIR=/tmp/sockets \
         -v /tmp/sockets:/tmp/sockets:rw \
         -e NVIDIA_DRIVER_VOLUME_NAME=nvidia-driver-vol \
