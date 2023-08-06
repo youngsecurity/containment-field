@@ -1,0 +1,7 @@
+    -e XDG_RUNTIME_DIR=/tmp/.X11-unix/ \
+    -v /tmp/.X11-unix/:/tmp/.X11-unix/:rw \
+    -e XAUTHORITY=/home/retro/.Xauthority \
+    -v ~/.Xauthority:/home/retro/.Xauthority:ro \
+    -e PULSE_COOKIE=/home/retro/.config/pulse/cookie \
+    -e PULSE_SERVER=unix:/tmp/.X11-unix/pulse-socket \
+    -v ~/.config/pulse/:/home/retro/.config/pulse:ro \

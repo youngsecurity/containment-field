@@ -1,10 +1,10 @@
 #!/bin/sh
 
 ################################################################################
-# Script Name: docker-run-wolf.sh
-# Description: This script will deploy GoW Wolf
+# Script Name: docker-run-wolf-desktop.sh
+# Description: This script will deploy Wolf Desktop
 # Author: Joseph Young <joe@youngsecurity.net>
-# Created: 2023/06/07
+# Created: 2023/06/23
 # Version: 1.0
 ################################################################################
 
@@ -16,12 +16,17 @@ set -e
 #VAR2="value2"
 
 # Define functions
-deploy_wolf() {
+deploy_wolf_desktop() {
     docker run \
         --name wolf \
         --network=host \
-        -e XDG_RUNTIME_DIR=/tmp/sockets \
-        -v /tmp/sockets:/tmp/sockets:rw \
+        -e XDG_RUNTIME_DIR=/tmp/.X11-unix/ \
+        -v /tmp/.X11-unix/:/tmp/.X11-unix/:rw \
+        -e XAUTHORITY=/home/retro/.Xauthority \
+        -v ~/.Xauthority:/home/retro/.Xauthority:ro \
+        -e PULSE_COOKIE=/home/retro/.config/pulse/cookie \
+        -e PULSE_SERVER=unix:/tmp/.X11-unix/pulse-socket \
+        -v ~/.config/pulse/:/home/retro/.config/pulse:ro \
         -e NVIDIA_DRIVER_VOLUME_NAME=nvidia-driver-vol \
         -v nvidia-driver-vol:/usr/nvidia:rw \
         -e HOST_APPS_STATE_FOLDER=/etc/wolf \
@@ -48,7 +53,7 @@ deploy_wolf() {
 echo "Starting the script!"
 
 # Call a function
-deploy_wolf
+deploy_wolf_desktop
 
 # Do some other things...
 #echo "Variable 1 is: $VAR1"
