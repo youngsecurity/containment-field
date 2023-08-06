@@ -20,6 +20,8 @@ deploy_wolf() {
     docker run \
         --name wolf \
         --network=host \
+        -e TZ =	America/New_York \
+        -e WOLF_LOG_LEVEL = DEBUG \
         -e XDG_RUNTIME_DIR=/tmp/sockets \
         -v /tmp/sockets:/tmp/sockets:rw \
         -e NVIDIA_DRIVER_VOLUME_NAME=nvidia-driver-vol \
@@ -30,7 +32,7 @@ deploy_wolf() {
         --device-cgroup-rule "c 13:* rmw" \
         --device /dev/nvidia-uvm \
         --device /dev/nvidia-uvm-tools \
-        --device /dev/dri/ \
+        --device /dev/dri/renderD129 \
         --device /dev/nvidia-caps/nvidia-cap1 \
         --device /dev/nvidia-caps/nvidia-cap2 \
         --device /dev/nvidiactl \
