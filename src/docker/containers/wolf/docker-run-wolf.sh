@@ -19,7 +19,8 @@ set -e
 deploy_wolf() {
     docker run \
         --name wolf \
-        --network=host \
+        --network=macvlan255 \
+        --ip=10.0.255.145 \
         -e TZ=America/New_York \
         -e WOLF_LOG_LEVEL=DEBUG \
         -e XDG_RUNTIME_DIR=/tmp/sockets \
