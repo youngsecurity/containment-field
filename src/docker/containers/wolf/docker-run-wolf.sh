@@ -23,6 +23,7 @@ deploy_wolf() {
         --ip=10.0.255.145 \
         -e TZ=America/New_York \
         -e WOLF_LOG_LEVEL=DEBUG \
+        -e WOLF_RENDER_NODE=/dev/dri/renderD129 \
         -e XDG_RUNTIME_DIR=/tmp/sockets \
         -v /tmp/sockets:/tmp/sockets:rw \
         -e NVIDIA_DRIVER_VOLUME_NAME=nvidia-driver-vol \
