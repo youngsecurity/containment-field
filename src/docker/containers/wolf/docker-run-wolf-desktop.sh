@@ -19,7 +19,8 @@ set -e
 deploy_wolf_desktop() {
     docker run \
         --name wolf \
-        --network=host \
+        --network=macvlan255 \
+        --ip=10.0.255.145 \
         -e XDG_RUNTIME_DIR=/tmp/.X11-unix/ \
         -v /tmp/.X11-unix/:/tmp/.X11-unix/:rw \
         -e XAUTHORITY=/home/retro/.Xauthority \
