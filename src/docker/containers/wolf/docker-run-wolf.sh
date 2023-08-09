@@ -34,6 +34,7 @@ deploy_wolf() {
         --device-cgroup-rule "c 13:* rmw" \
         --device /dev/nvidia-uvm \
         --device /dev/nvidia-uvm-tools \
+        --device /dev/dri/card1 \
         --device /dev/dri/renderD129 \
         --device /dev/nvidia-caps/nvidia-cap1 \
         --device /dev/nvidia-caps/nvidia-cap2 \
