@@ -20,7 +20,7 @@ deploy_wolf() {
     docker run \
         --name wolf \
         --network macvlan255 \
-        --ip=10.0.255.146 \
+        --ip=10.0.255.145 \
         -e TZ=America/New_York \
         -e WOLF_LOG_LEVEL=DEBUG \
         -e WOLF_RENDER_NODE=/dev/dri/renderD129 \
