@@ -21,11 +21,10 @@ deploy_ziti_admin_console() {
         -it \
         --name ziti-admin-console \
         --network macvlan255 \
-        --network-alias ziti-admin-console \
         -p 1408:1408 \
         -p 8443:8443 \
-        -v "${HOME}/docker-volume/myFirstZitiNetwork/ziti-edge-controller-intermediate/keys/ziti-edge-controller-server.key":/usr/src/app/server.key \
-        -v "${HOME}/docker-volume/myFirstZitiNetwork/ziti-edge-controller-intermediate/certs/ziti-edge-controller-server.chain.pem":/usr/src/app/server.chain.pem \
+        -v "${HOME}/docker-volume/macvlan255/ziti-edge-controller-intermediate/keys/ziti-edge-controller-server.key":/usr/src/app/server.key \
+        -v "${HOME}/docker-volume/macvlan255/ziti-edge-controller-intermediate/certs/ziti-edge-controller-server.chain.pem":/usr/src/app/server.chain.pem \
         openziti/zac
 }
 
