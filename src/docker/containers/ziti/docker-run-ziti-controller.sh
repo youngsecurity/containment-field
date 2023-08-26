@@ -19,7 +19,6 @@ set -e
 deploy_ziti_controller() {
     docker run \
         -it \
-        --rm \
         --name ziti-controller \
         --network macvlan255 \
         --ip=10.0.255.147 \
