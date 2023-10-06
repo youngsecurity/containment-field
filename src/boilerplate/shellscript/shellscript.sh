@@ -32,3 +32,4 @@ echo "Variable 1 is: $VAR1"
 echo "Variable 2 is: $VAR2"
 
 # Notify the user the script has completed.
+#
