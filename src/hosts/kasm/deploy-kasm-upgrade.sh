@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ################################################################################
 # Script Name: deploy-kasm.sh
@@ -8,10 +8,9 @@
 #              on the Webb App servers. The upgrade script can be found in the
 #              installation package under `kasm_release/upgrade.sh`.
 #              These instructions assume there are 3 servers with the app, db,
-#              and agent roles.
+#              and agent roles. https://www.kasmweb.com/docs/latest/upgrade.html
 # Author: Joseph Young <joe@youngsecurity.net>
 # Created: 2023/06/11
-# Version: 1.0
 ################################################################################
 
 # Exit immediately if a command exits with a non-zero status

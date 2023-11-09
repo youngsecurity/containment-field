@@ -2,7 +2,7 @@
 
 **Issue:** For security reasons, The Docker host cannot send packets to containers on the same ipvlan or macvlan interface.
 
-**Solution:** To work around this, create a separate macvlan or ipvlan bridge interface on the same IP space and use this IP to route packets to containers. 
+**Solution:** To work around this, create a separate macvlan or ipvlan bridge interface on the same IP space and use this IP to route packets to containers.
 
 For the purpose of this example, let’s say we have a host interface eno1 that looks like this:
 
