@@ -8,7 +8,7 @@
 ################################################################################
 
 # Exit immediately if a command exits with a non-zero status
-set -e
+#set -e
 
 # Define variables
 #VAR1="value1"
