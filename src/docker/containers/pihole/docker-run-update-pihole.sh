@@ -1,12 +1,12 @@
-#!/bin/sh
+#!/bin/bash
 
 # .SCRIPT NAME: docker-run-update-pihole.sh
 # .AUTHOR: Joseph Young <joe@youngsecurity.net>
-# .DATE: 3/22/2023
+# .DATE: 12/04/2023
 # .DOCUMENTATION: https://github.com/pi-hole/docker-pi-hole#readme
 #   This script will perform the following tasks:
-#       1. Remove the Docker container named "pihole"
-#       2. Pull the latest Pi-hole image from Docker Hub
+#       1. Pull the latest Pi-hole image from Docker Hub
+#       2. Remove the Docker container named "pihole"
 #       3. Setup the Docker Pi-hole container and run it detached, interactive and allocate a pseudo-TTY
 # .DESCRIPTION: This is a Docker run shell script to update Docker Pi-hole.
 # .EXAMPLE: ./docker-run-update-pihole.sh <arguments>
@@ -18,40 +18,57 @@ set -e
 # Notify the user the script has started.
 echo "Starting the script!"
 
-# Delete existing Pi-hole
-#echo "Deleting existing Pi-hole..."
-#docker rm -f pihole
-#echo "Pi-hole container removed!"
+# Check GitHub for latest release version
+#(Invoke-RestMethod -Uri "https://api.github.com/repos/pi-hole/pi-hole/releases/latest" | Select-Object -ExpandProperty tag_name)
+curl -s https://api.github.com/repos/pi-hole/pi-hole/releases/latest | jq -r '.tag_name'
+
+# Check Docker Hub for latest Docker image version
+imageSource=pihole/pihole:latest
+docker pull $imageSource
+docker image inspect $imageSource | jq -r '.[].RepoDigests[]' | awk -F@ '{print $2}'
+# shellcheck disable=SC1035
+digest=$(!!)
+version=$(curl -s 'https://hub.docker.com/v2/repositories/pihole/pihole/tags' -H 'Content-Type: application/json' | jq -r '.results[] | select(.digest == "'"$digest"'") | .name' | sed -n 2p)
+# Setup pihole using specific tag, because the :latest tag does not always pull down the latest version
+echo "Pulling Pi-hole image..."
+# docker pull pihole/pihole:latest
+docker pull pihole/pihole:"$version"
 
 # Shutting down the stack
-echo "Shutting down the stack..."
-docker compose down
+#echo "Shutting down the stack..."
+#docker compose down
 
-# Setup pihole using specific tag, because the :latest tag does not always pull down the latest version
-echo "Pulling the latest Pi-hole image..."
-# docker pull pihole/pihole:latest
-docker pull pihole/pihole:2023.03.1
+# Stopping the container
+echo "Stopping the container..."
+docker container stop pihole
+
+# Delete existing Pi-hole
+echo "Deleting existing Pi-hole..."
+docker rm -f pihole
+echo "Pi-hole container removed!"
 
 # Starting the stack...
-echo "Starting up the stack..."
-docker compose up -d
+#echo "Starting up the stack..."
+#docker compose up -d
 
-# Note: FTLCONF_LOCAL_IPV4 should be replaced with your external ip.
-# docker run -itd \
-#     --name pihole \
-#     -p 53:53/tcp -p 53:53/udp \
-#     -p 81:80 \
-#     -e TZ=America/New_York \
-#     -v etc-pihole:/etc/pihole/ \
-#     -v etc-dnsmasq.d:/etc/dnsmasq.d/ \
-#     --dns=127.0.0.1 --dns=8.8.8.8 \
-#     --restart=unless-stopped \
-#     --hostname pihole \
-#     -e VIRTUAL_HOST="pihole" \
-#     -e PROXY_LOCATION="pihole" \
-#     -e FTLCONF_LOCAL_IPV4="127.0.0.1" \
-#     --net=Transit \
-#     pihole/pihole:2023.02.2
+# Starting up the container...
+echo "Starting up the container..."
+#docker run -itd -p 81:80 -p 53:53/tcp -p 53:53/udp --name=pihole --net=Transit --ip=10.10.10.5 --restart=always -h pihole -e TZ=America/New_York -v etc-pihole:/etc/pihole/ -v etc-dnsmasq.d:/etc/dnsmasq.d/ pihole/pihole:2023.05.2
+docker run -itd \
+    -p 53:53/tcp -p 53:53/udp \
+    -p 81:80 \
+    --name=pihole \
+    --net=Transit \
+    --ip=10.10.10.5 \
+    --dns=127.0.0.1 --dns=8.8.8.8 \
+    --restart=always \
+    --hostname pihole \
+    -e VIRTUAL_HOST="pihole" \
+    -e TZ=America/New_York \
+    -v etc-pihole:/etc/pihole/ \
+    -v etc-dnsmasq.d:/etc/dnsmasq.d/ \
+    -e PROXY_LOCATION="pihole" \
+    pihole/pihole:2023.02.2
 
 printf 'Starting up pihole container '
 for i in $(seq 1 30); do
@@ -64,7 +81,7 @@ for i in $(seq 1 30); do
         printf '.'
     fi
 
-    if [ $i -eq 30 ] ; then
+    if [ "$i" -eq 30 ] ; then
         echo -e "\nTimed out waiting for Pi-hole start, consult your container logs for more info (\`docker logs pihole\`)"
         #exit 1
     fi
