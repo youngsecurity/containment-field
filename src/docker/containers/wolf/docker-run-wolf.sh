@@ -2,9 +2,9 @@
 
 ################################################################################
 # Script Name: docker-run-wolf.sh
-# Description: This script will deploy GoW Wolf
+# Description: This script will deploy Wolf
 # Author: Joseph Young <joe@youngsecurity.net>
-# Created: 2023/06/07
+# Created: 2024/01/02
 # Version: 1.0
 ################################################################################
 
@@ -16,7 +16,7 @@ set -e
 #VAR2="value2"
 
 # Define functions
-deploy_wolf() {
+deploy_container() {
     docker run \
         --name wolf \
         --network macvlan255 \
@@ -34,8 +34,7 @@ deploy_wolf() {
         --device-cgroup-rule "c 13:* rmw" \
         --device /dev/nvidia-uvm \
         --device /dev/nvidia-uvm-tools \
-        --device /dev/dri/card1 \
-        --device /dev/dri/renderD129 \
+        --device /dev/dri/ \
         --device /dev/nvidia-caps/nvidia-cap1 \
         --device /dev/nvidia-caps/nvidia-cap2 \
         --device /dev/nvidiactl \
@@ -53,7 +52,7 @@ deploy_wolf() {
 echo "Starting the script!"
 
 # Call a function
-deploy_wolf
+deploy_container
 
 # Do some other things...
 #echo "Variable 1 is: $VAR1"
