@@ -60,15 +60,14 @@ docker run -itd \
     --name=pihole \
     --net=Transit \
     --ip=10.10.10.5 \
-    --dns=127.0.0.1 --dns=8.8.8.8 \
     --restart=always \
     --hostname pihole \
-    -e VIRTUAL_HOST="pihole" \
     -e TZ=America/New_York \
+    -e VIRTUAL_HOST="pihole" \
     -v etc-pihole:/etc/pihole/ \
     -v etc-dnsmasq.d:/etc/dnsmasq.d/ \
     -e PROXY_LOCATION="pihole" \
-    pihole/pihole:2023.02.2
+    pihole/pihole:2023.11.0
 
 printf 'Starting up pihole container '
 for i in $(seq 1 30); do
