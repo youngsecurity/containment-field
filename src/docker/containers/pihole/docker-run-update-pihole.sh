@@ -2,7 +2,7 @@
 
 # .SCRIPT NAME: docker-run-update-pihole.sh
 # .AUTHOR: Joseph Young <joe@youngsecurity.net>
-# .DATE: 12/04/2023
+# .DATE: 01/25/2024
 # .DOCUMENTATION: https://github.com/pi-hole/docker-pi-hole#readme
 #   This script will perform the following tasks:
 #       1. Pull the latest Pi-hole image from Docker Hub
@@ -67,7 +67,7 @@ docker run -itd \
     -v etc-pihole:/etc/pihole/ \
     -v etc-dnsmasq.d:/etc/dnsmasq.d/ \
     -e PROXY_LOCATION="pihole" \
-    pihole/pihole:2023.11.0
+    pihole/pihole:"$version"
 
 printf 'Starting up pihole container '
 for i in $(seq 1 30); do
