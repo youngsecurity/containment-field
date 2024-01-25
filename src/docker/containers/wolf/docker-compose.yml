@@ -1,0 +1,27 @@
+version: "3.8"
+services:
+  wolf:
+    image: ghcr.io/games-on-whales/wolf:dev-input-protocol
+    environment:
+      - XDG_RUNTIME_DIR=/tmp/sockets
+      - HOST_APPS_STATE_FOLDER=/etc/wolf
+    volumes:
+      - /etc/wolf/wolf:/wolf/cfg
+      - /tmp/sockets:/tmp/sockets:rw
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+      - /dev/shm:/dev/shm:rw
+      - /dev/input:/dev/input:rw
+    devices:
+      - /dev/dri/renderD129
+      - /dev/uinput
+    device_cgroup_rules:
+      - 'c 13:* rmw'
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    network_mode: host
+    restart: unless-stopped
