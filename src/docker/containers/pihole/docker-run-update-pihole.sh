@@ -24,7 +24,7 @@ echo "Starting the script!"
 # Shell
 TAG_NAME=$(curl -s https://api.github.com/repos/pi-hole/docker-pi-hole/releases/latest | jq -r '.tag_name')
 
-# Setup pihole using specific tag, because the :latest tag does not always pull down the latest version
+# Setup the container using specific '.tag_name'
 echo "Pulling Pi-hole image..."
 docker pull pihole/pihole:"$TAG_NAME"
 
