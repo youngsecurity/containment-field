@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ################################################################################
 # Script Name: 05-get-vscode.sh
@@ -35,7 +35,7 @@ echo "Please choose an option:"
 echo "1. Install VS Code"
 echo "2. Install VS Code Insiders"
 echo "3. Exit"
-read -p "Enter your choice (1, 2, or 3): " choice
+read -rp "Enter your choice (1, 2, or 3): " choice
 
 # Check the user's choice
 if [ "$choice" = "1" ]; then
