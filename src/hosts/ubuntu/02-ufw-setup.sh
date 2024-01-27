@@ -32,7 +32,8 @@ sudo ufw allow from 10.0.255.0/24 to any port 8000 # portainer optional for Edge
 sudo ufw allow from 10.0.255.0/24 to any port 8080
 
 # SSHd Firewall ACL
-sudo ufw allow from 10.0.255.0/24 to any port 22 # ssh
+sudo ufw allow from 10.0.255.0/24 to any port 22
+sudo ufw allow from 10.0.0.0/8 to any port 22
 
 # Start UFW
 sudo ufw enable
