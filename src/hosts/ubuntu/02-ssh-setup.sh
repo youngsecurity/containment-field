@@ -39,4 +39,4 @@ ssh-add "$ssh_key_path"
 ssh-add -l
 
 # Do not leave the private key on the system
-sudo rm -f "$ssh_key_path"
+#sudo rm -f "$ssh_key_path"
