@@ -15,13 +15,13 @@ eval "$(ssh-agent -s)"
 ssh-add -l
 
 # If none exists, prompt the user for the location of their private SSH key
-read -p "Enter the path to your private SSH key: " ssh_key_path
+read -rp "Enter the path to your private SSH key: " ssh_key_path
 
 # Add the private key to the SSH agent
-ssh-add $ssh_key_path
+ssh-add "$ssh_key_path"
 
 # Check the status of the SSH agent to confirm that the key was added
 ssh-add -l
 
 # Do not leave the private key on the system
-sudo rm -f $ssh_key_path
+sudo rm -f "$ssh_key_path"
