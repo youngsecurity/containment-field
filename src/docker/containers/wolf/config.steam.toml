@@ -1,0 +1,56 @@
+# To support steam:edge
+# Discussion Link: https://discord.com/channels/856434175455133727/856436453860704266/1199712382402953237
+[[apps]]
+title = "Steam"
+start_virtual_compositor = true
+
+[apps.runner]
+type = "docker"
+name = "WolfSteam"
+image = "ghcr.io/games-on-whales/steam:edge"
+mounts = []
+env = ["PROTON_LOG=1","RUN_GAMESCOPE=true","GOW_REQUIRED_DEVICES=/dev/input/event* /dev/dri/* /dev/nvidia*"]
+devices = []
+ports = []
+base_create_json = """
+{
+  "HostConfig": {
+    "IpcMode": "host",
+    "CapAdd": ["SYS_ADMIN", "SYS_NICE", "SYS_PTRACE", "NET_RAW", "MKNOD", "NET_ADMIN"],
+    "SecurityOpt": ["seccomp=unconfined", "apparmor=unconfined"],
+    "Privileged": false
+  }
+}
+\
+"""
+
+# default config.toml
+[[apps]]
+title = "Steam"
+start_virtual_compositor = true
+
+[apps.runner]
+type = "docker"
+name = "WolfSteam"
+image = "ghcr.io/games-on-whales/steam:edge"
+mounts = []
+env = ["PROTON_LOG=1","RUN_GAMESCOPE=true","GOW_REQUIRED_DEVICES=/dev/input/event* /dev/dri/* /dev/nvidia*"]
+devices = []
+ports = []
+base_create_json = """
+{
+  "HostConfig": {
+    "IpcMode": "host",
+    "CapAdd": ["SYS_ADMIN", "SYS_NICE"],
+    "Privileged": false,
+    "DeviceRequests": [{
+      "Driver": "",
+      "Count": -1,
+      "DeviceIDs": null,
+      "Capabilities": [["gpu"]],
+      "Options": {}
+    }]
+  }
+}
+\
+"""
