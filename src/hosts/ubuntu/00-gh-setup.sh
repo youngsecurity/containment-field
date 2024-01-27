@@ -7,6 +7,19 @@
 #
 ###################################################################
 
+# Prerequisites
+# Check if wget is installed
+if ! command -v wget &> /dev/null; then
+    echo "wget could not be found. Installing wget..."
+    sudo apt-get install wget -y
+fi
+
+# Check if curl is installed
+if ! command -v curl &> /dev/null; then
+    echo "curl could not be found. Installing curl..."
+    sudo apt-get install curl -y
+fi
+
 # Define the directory path
 directory=~/github/
 
