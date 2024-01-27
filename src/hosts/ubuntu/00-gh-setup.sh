@@ -20,6 +20,13 @@ if ! command -v curl &> /dev/null; then
     sudo apt-get install curl -y
 fi
 
+# Check if bitwarden is installed
+if ! command -v bitwarden &> /dev/null; then
+    echo "bitwarden could not be found. Installing bitwarden..."
+    sudo snap install bitwarden
+fi
+sudo snap install bitwarden
+
 # Define the directory path
 directory=~/github/
 
