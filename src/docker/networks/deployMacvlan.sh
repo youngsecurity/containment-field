@@ -39,5 +39,11 @@ docker network create -d macvlan \
     --gateway=10.0.255.1 \
     -o parent=enp3s0 macvlan255
 
+docker network create -d macvlan \
+    --subnet=10.0.255.0/24 \
+    --ip-range=10.0.255.144/28 \
+    --gateway=10.0.255.1 \
+    -o parent=eth0 macvlan255
+
 # Notify the user the script has completed.
 echo "Script has finished!"
