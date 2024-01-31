@@ -35,7 +35,7 @@ Ceph Dashboard is now available at:
 
 You can access the Ceph CLI with:
 
-        sudo ./cephadm shell --fsid fd4a7484-bf46-11ee-bb27-00155dff1910 -c /etc/ceph/ceph.conf -k /etc/ceph/ceph.client.admin.keyring
+        sudo ./cephadm shell --fsid <fsid> -c /etc/ceph/ceph.conf -k /etc/ceph/ceph.client.admin.keyring
         
 Please consider enabling telemetry to help improve Ceph:
 
