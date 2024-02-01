@@ -2,7 +2,7 @@
 
 ## [Shared Storage (Ceph)](https://geek-cookbook.funkypenguin.co.nz/docker-swarm/shared-storage-ceph/)
 
-While Docker Swarm is great for keeping containers running (and restarting those that fail), it does nothing for persistent storage. This means if you actually want your containers to keep any data persistent across restarts (hint: you do!), you need to provide shared storage to every docker node.
+Ceph is a distributed file system that is compatible with Docker distributed storage options. 
 
 ### Install cephadm on master node
 
