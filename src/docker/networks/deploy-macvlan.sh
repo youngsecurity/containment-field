@@ -4,7 +4,7 @@
 # Script Name: deploy-macvlan.sh
 # Description: This script will deploy a macvlan.
 # Author: Joseph Young <joe@youngsecurity.net>
-# Created: 2023/06/07
+# Created: 2024/02/01
 # Version: 1.0
 ################################################################################
 
@@ -12,7 +12,7 @@
 set -e
 
 # Define variables
-#VAR1="value1"
+interfaceName="eth0"
 #VAR2="value2"
 
 # Define functions
@@ -31,19 +31,13 @@ echo "Starting the script!"
 #echo "Variable 1 is: $VAR1"
 #echo "Variable 2 is: $VAR2"
 
-sudo ip link set enp3s0 promisc on
+sudo ip link set "$interfaceName" promisc on
 
 docker network create -d macvlan \
     --subnet=10.0.255.0/24 \
     --ip-range=10.0.255.144/28 \
     --gateway=10.0.255.1 \
-    -o parent=enp3s0 macvlan255
-
-docker network create -d macvlan \
-    --subnet=10.0.255.0/24 \
-    --ip-range=10.0.255.144/28 \
-    --gateway=10.0.255.1 \
-    -o parent=eth0 macvlan255
+    -o parent="$interfaceName" macvlan255
 
 # Notify the user the script has completed.
 echo "Script has finished!"
