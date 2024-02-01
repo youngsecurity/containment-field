@@ -7,6 +7,8 @@ Ceph is a distributed file system that is compatible with Docker distributed sto
 ### Install cephadm on master node
 
 ```bash
+mkdir ~/cephadm/
+cd ~/cephadm/
 MYIP=`ip route get 1.1.1.1 | grep -oP 'src \K\S+'`
 curl --silent --remote-name --location https://github.com/ceph/ceph/raw/octopus/src/cephadm/cephadm
 chmod +x cephadm
