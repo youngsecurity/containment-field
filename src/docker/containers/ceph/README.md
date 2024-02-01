@@ -16,7 +16,7 @@ mkdir -p /etc/ceph
 ./cephadm bootstrap --mon-ip $MYIP
 ```
 
-The process takes about 30 seconds, after which, you'll have a MVC (Minimum Viable Cluster)1, encompassing a single monitor and mgr instance on your chosen node.
+The process takes about 30 seconds, after which, you'll have a MVC (Minimum Viable Cluster), encompassing a single monitor and mgr instance on your chosen node.
 
 ### Prepare other nodes
 It's now necessary to tranfer the following files to your other nodes, so that cephadm can add them to your cluster, and so that they'll be able to mount the cephfs when we're done:
