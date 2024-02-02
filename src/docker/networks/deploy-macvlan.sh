@@ -12,32 +12,30 @@
 set -e
 
 # Define variables
-interfaceName="eth0"
-#VAR2="value2"
+infName="eth0"
+subnet="10.0.255.0/24"
+ipRange="10.0.255.144/28"
+gatewayIP="10.0.255.1"
+netName="macvlan255"
+netType="macvlan" # choose from bridge, host, overlay, macvlan, none, custom
 
 # Define functions
-#function my_function() {
-#    echo "Hello, world!"
-#}
+function deploy_Macvlan() {
+    sudo ip link set "$infName" promisc on
+
+    docker network create -d $netType \
+        --subnet=$subnet \
+        --ip-range=$ipRange \
+        --gateway=$gatewayIP \
+        -o parent="$infName" $netName
+}
 
 # Main code
 # Notify the user the script has started.
 echo "Starting the script!"
 
 # Call a function
-#my_function
-
-# Do some other things...
-#echo "Variable 1 is: $VAR1"
-#echo "Variable 2 is: $VAR2"
-
-sudo ip link set "$interfaceName" promisc on
-
-docker network create -d macvlan \
-    --subnet=10.0.255.0/24 \
-    --ip-range=10.0.255.144/28 \
-    --gateway=10.0.255.1 \
-    -o parent="$interfaceName" macvlan255
+deploy_Macvlan
 
 # Notify the user the script has completed.
 echo "Script has finished!"
