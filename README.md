@@ -1,4 +1,4 @@
-[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/{owner}/{repo}/badge)](https://securityscorecards.dev/viewer/?uri=github.com/{owner}/{repo})
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/youngsecurity/containment-field/badge)](https://securityscorecards.dev/viewer/?uri=github.com/youngsecurity/containment-field)
 # Containment Field
 
 # Table of Contents <!-- omit from toc -->
