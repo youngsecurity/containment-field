@@ -1,12 +1,19 @@
+# Security
+
+If you find a significant vulnerability or evidence of one, please report it privately.
+
+We prefer that you use the [GitHub mechanism for privately reporting a vulnerability](https://docs.github.com/en/code-security/security-advisories/guidance-on-reporting-and-writing/privately-reporting-a-security-vulnerability#privately-reporting-a-security-vulnerability). Under the
+[main repository's security tab](https://github.com/youngsecurity/containment-field/security), click "Report a vulnerability" to open the advisory form.
+
 # Security Policy
 
-This document outlines the security measures in place to ensure the confidentiality, integrity, and availability of our systems and data. It is important that all team members understand and adhere to these policies.
+This document outlines the security measures to ensure the confidentiality, integrity, and availability of our systems and data. All team members must understand and adhere to these policies.
 
 ## Confidentiality
 
 ### Access Control
 
-Access to our systems and data will be granted based on the principle of least privilege. This means that users are given only the minimum level of access necessary to perform their job functions. Access levels will be reviewed regularly and adjusted as needed.
+Access to our systems and data will be granted based on the principle of least privilege. This means that users are given only the minimum access necessary to perform their job functions. Access levels will be reviewed regularly and adjusted as needed.
 
 ### Passwords
 
