@@ -21,13 +21,16 @@ Then in the same directory run:
 docker build -t openinterpreter . 
 
 # Add to the interpreter command that runs in the container this info telling it to connect to Mistral:
-docker run -dit -v /path/on/your/host:/path/in/the/container --name open-interpreter openinterpreter interpreter --model ollama/mistral:latest 
+docker run -dit -v /path/on/your/host:/path/in/the/container --name open-interpreter openinterpreter interpreter --model dolphin-mistral:latest --api_base http://<ollama-ip>:11434/v1
 
-# Replace mistral:latest with the model you want to use.
-
-# Example
+# Examples
 #docker run -dit -v $(pwd):/files --name interpreter-instance openinterpreter interpreter
-#docker run -dit --gpus=all -v $(pwd):/files --name open-interpreter openinterpreter interpreter --model ollama/mistral:latest
+
+# Using dolphin-mistral
+docker run -dit --network=macvlan255 --ip 10.0.255.151 --gpus=all -v ~/GitHub/ai-open-interpreter:/files --name open-interpreter openinterpreter interpreter --model dolphin-mistral:latest --api_base http://10.0.255.147:11434/v1
+
+# Launch the container with no model loaded
+docker run -dit --network=macvlan255 --ip 10.0.255.151 --gpus=all -v ~/GitHub/ai-open-interpreter:/files --name open-interpreter openinterpreter
 
 # Example using flags
 #docker run -dit openinterpreter interpreter --custom_instructions "Be as concise as possible"
