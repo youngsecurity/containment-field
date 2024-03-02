@@ -11,8 +11,9 @@ interpreter.llm.max_tokens = 1000
 interpreter.llm.context_window = 3000
 
 #interpreter.chat() # Executes a single command
-#interpreter.chat("Use ping to check if 8.8.8.8 is up by sending 3 pings without waiting or sleeping. Do not try to install any dependencies and do not suggest using other software. Do not use sshpass. Do not use python. Use a bash script. Write as few lines as possible to perform the task.")
-interpreter.chat("SSH to devusr@10.0.255.44, then disconnect from SSH. Do not install any dependencies or extra software.")
+#interpreter.chat("SSH to <user>@<host>, then disconnect from SSH. Do not install any dependencies or extra software.")
+interpreter.chat("Use a bash script. Write as few lines as possible to perform the task. Do not install any dependencies or suggest using other software. Do not use python. I want you to first, SSH to devusr@10.0.255.44. Second, use the ping binary to check if 8.8.8.8 is up by sending 3 pings and quit without waiting or sleeping. Third, disconnect from SSH.")
+
 
 
 
