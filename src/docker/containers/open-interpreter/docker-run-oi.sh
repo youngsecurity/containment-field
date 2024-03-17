@@ -41,9 +41,9 @@ docker run -dit \
 	--gpus=all \
 	-v /:/files \
 	--name open-interpreter \
-	openinterpreter interpreter \
+	open-interpreter:latest interpreter \
 	--model dolphin-mistral:latest \
-	--api_base http://10.0.255.147:11434/v1
+	--api_base http://ollama:11434/v1
 
 # Notify the user the script has completed.
 echo "Script has finished!"
