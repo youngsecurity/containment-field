@@ -1,5 +1,6 @@
 # Start with Python 3.11
-FROM python:3.11
+#FROM python:3.11
+FROM cgr.dev/chainguard/pytorch-cuda12:latest
 
 # Replace <your_openai_api_key> with your own key
 ENV OPENAI_API_KEY <your_openai_api_key>
