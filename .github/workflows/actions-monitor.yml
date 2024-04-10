@@ -1,0 +1,33 @@
+name: Monitor GitHub Actions File for Changes
+
+on:
+  push:
+    branches:
+      - main # or any other branch you want to monitor
+    paths:
+      - 'https://github.com/ossf/scorecard/blob/main/.github/workflows/scorecard-analysis.yml' # path to the file(s) you want to monitor
+    types: [file] # trigger on file changes only
+  workflow_dispatch: # for manual triggering, if needed
+
+jobs:
+  monitor-actions-file:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Monitor file changes
+        id: watch-file
+        run: |
+          while true; do
+            git diff --exit-code;
+            if [ $? -eq 0 ]; then
+              echo "Changes detected, notifying on GitHub Status";
+              # Add your notification command or GitHub API call here.
+              # For example, you can use the "github-status" action to update a status check:
+              echo "actions/monitor-file" >> .github/workflows/status.yml
+            fi
+            sleep 30;
+          done
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
