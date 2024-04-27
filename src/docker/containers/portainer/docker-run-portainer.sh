@@ -19,20 +19,20 @@
 echo "Starting the script!"
 
 # Check GitHub for latest release version
-curl -s https://api.github.com/repos/portainer/portainer/releases/latest | jq -r '.tag_name'
+ghVersion=$(curl -s https://api.github.com/repos/portainer/portainer/releases/latest | jq -r '.tag_name')
 
 # Check Docker Hub for latest Docker image version
-imageSource=portainer/portainer-ce:latest
-docker pull $imageSource
-docker image inspect $imageSource | jq -r '.[].RepoDigests[]' | awk -F@ '{print $2}'
+imageSource=portainer/portainer-ce:"$ghVersion"
+docker pull "$imageSource"
+docker image inspect "$imageSource" | jq -r '.[].RepoDigests[]' | awk -F@ '{print $2}'
 # shellcheck disable=SC1035
-digest=$(!!)
-version=$(curl -s 'https://hub.docker.com/v2/repositories/portainer/portainer-ce/tags' -H 'Content-Type: application/json' | jq -r '.results[] | select(.digest == "'"$digest"'") | .name' | sed -n 2p)
+#digest=$(!!)
+#version=$(curl -s 'https://hub.docker.com/v2/repositories/portainer/portainer-ce/tags' -H 'Content-Type: application/json' | jq -r '.results[] | select(.digest == "'"$digest"'") | .name' | sed -n 2p)
 
 
 # Setup container using specific tag, because the :latest tag does not always pull down the latest version
 echo "Pulling Docker image..."
-docker pull portainer/portainer-ce:"$version"
+docker pull portainer/portainer-ce:"$ghVersion"
 
 # Shutting down the stack
 #echo "Shutting down the stack..."
@@ -62,7 +62,7 @@ docker run -itd \
     --restart=unless-stopped \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v portainer_data:/data \
-    portainer/portainer-ce:"$version"
+    portainer/portainer-ce:"$ghVersion"
 
 # Notify the user the script has completed.
 echo "Script has finished!"
