@@ -16,7 +16,7 @@ deploy_container() {
     --network $network \
     --ip=$ip \
     --restart=unless-stopped \
-    -e BIND9_USER=root \
+    -e BIND9_USER=bind \
     -e $timezone \
     -v ns1_config:/etc/bind \
     -v ns1_cache:/var/cache/bind \
