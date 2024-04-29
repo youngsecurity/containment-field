@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  bind9:
+    container_name: ns1
+    image: ubuntu/bind9:9.18-22.04_beta
+    environment:
+      - BIND9_USER=root
+      - TZ=America/New_York
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+    volumes:
+      - ns1_config:/etc/bind
+      - ns1_cache:/var/cache/bind
+      - ns1_records:/var/lib/bind
+    restart: unless-stopped
