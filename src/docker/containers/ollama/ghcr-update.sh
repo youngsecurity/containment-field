@@ -1,15 +1,15 @@
 #!/bin/bash
 
-# .SCRIPT NAME: docker-run-update-container.sh
+# .SCRIPT NAME: ghcr-update.sh
 # .AUTHOR: Joseph Young <joe@youngsecurity.net>
 # .DATE: 05/18/2024
 # .DOCUMENTATION: 
 #   This script will perform the following tasks:
-#       1. Check and pull the latest version of the container image from GitHub
-#       2. Stop and remove the Docker container
-#       3. Start the Docker container and run it detached, interactive and allocate a pseudo-TTY
-# .DESCRIPTION: This is a Docker run shell script to update a container.
-# .EXAMPLE: ./docker-run-update-"$container".sh <arguments>
+#       1. Check and pull the latest version of the container image
+#       2. Stop and remove the container
+#       3. Start the container and run it detached, interactive and allocate a pseudo-TTY
+# .DESCRIPTION: This is a shell script to update a container.
+# .EXAMPLE: ./ghcr-update.sh <arguments>
 
 # Exit immediately if a command exits with a non-zero status
 set -e
@@ -52,7 +52,7 @@ docker pull """$REPO":"$TAG_NAME"
 echo "Stopping the container..."
 docker container stop ollama
 
-# Delete existing Pi-hole
+# Delete existing container
 echo "Deleting existing container..."
 docker rm -f ollama
 echo "Container removed!"
