@@ -88,8 +88,9 @@ if [ $# -gt 0 ]; then # if CLI arguments are provided
     pull_container(){
         echo ""
         echo "Pulling image for container: $6..."
-        echo ""        
-        if ! docker pull "${3}/${4}:${1}"; then
+        echo ""
+        echo "ghcr.io/$3"/"$4":"$1" # Useful for debugging
+        if ! docker pull "ghcr.io/${3}/${4}:${1}"; then
             echo "Error: Failed to pull Docker image." | tee -a "$LOG_FILE" >&2
             echo "" >> $LOG_FILE
             exit 1
@@ -108,12 +109,12 @@ if [ $# -gt 0 ]; then # if CLI arguments are provided
                 --ip 10.0.255.148 \
                 -p 3000:8080 \
                 -v open-webui:/app/backend/data \
-                --hostanme open-webui \
+                --hostname open-webui \
                 --name "$6" \
                 -e OLLAMA_BASE_URL=http://ollama:11434 \
                 -e TZ=America/New_York \
                 --restart always \
-                "${3}/${4}:${1}"
+                "ghcr.io/${3}/${4}:${1}"
         fi
     }
     pull_container "$@"
@@ -167,8 +168,8 @@ else
         echo ""
         echo "Pulling image for container: $CONTAINERNAME..."
         echo ""
-        #echo "$OWNER"/"$REPO":"$VERSION" # Useful for debugging
-        if ! docker pull "${OWNER}/${GH_REPO}:${VERSION}"; then
+        echo "ghcr.io/$OWNER"/"$GH_REPO":"$VERSION" # Useful for debugging
+        if ! docker pull "ghcr.io/${OWNER}/${GH_REPO}:${VERSION}"; then
             echo "Error: Failed to pull Docker image." | tee -a "$LOG_FILE" >&2
             echo "" >> $LOG_FILE
             exit 1
@@ -187,12 +188,12 @@ else
                 --ip 10.0.255.148 \
                 -p 3000:8080 \
                 -v open-webui:/app/backend/data \
-                --hostanme open-webui \
+                --hostname open-webui \
                 --name "$CONTAINERNAME" \
-                -e OLLAMA_BASE_URL=http://ollama:11434/api \
+                -e OLLAMA_BASE_URL=http://ollama:11434 \
                 -e TZ=America/New_York \
                 --restart always \
-                "${OWNER}/${GH_REPO}:${VERSION}"
+                "ghcr.io/${OWNER}/${GH_REPO}:${VERSION}"
         fi
     }
     pull_container
