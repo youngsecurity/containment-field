@@ -45,13 +45,13 @@ if [ $# -gt 0 ]; then # if CLI arguments are provided
     echo "Info: CLI VERSION: $1" >> $LOG_FILE
     #TAG_NAME=""
     echo "Info: CLI TAG_NAME: $2" >> $LOG_FILE
-    #OWNER="ollama"
+    #OWNER=""
     echo "Info: CLI OWNER: $3" >> $LOG_FILE
-    #REPO="ollama"
+    #REPO=""
     echo "Info: CLI GH_REPO: $4" >> $LOG_FILE
-    #DOCKER_REPO="ollama"
+    #DOCKER_REPO=""
     echo "Info: CLI DOCKER_REPO: $5" >> $LOG_FILE
-    #CONTAINERNAME="ollama-test"
+    #CONTAINERNAME=""
     echo "Info: CLI CONTAINERNAME: $6" >> $LOG_FILE
 
     check_source() {
@@ -105,18 +105,18 @@ if [ $# -gt 0 ]; then # if CLI arguments are provided
             docker run -itd \
                 --gpus '"device=GPU-fcc90235-d4c3-65e4-f064-446367f1cb5c"' \
                 --network=macvlan255 \
-                --ip 10.0.255.147 \
-                -p 11434:11434 \
-                -v ollama:/root/.ollama \
-                --hostname ollama \
+                --ip 10.0.255.148 \
+                -p 3000:8080 \
+                -v open-webui:/app/backend/data \
+                --hostanme open-webui \
                 --name "$6" \
-                --restart always \
+                -e OLLAMA_BASE_URL=http://ollama:11434 \
                 -e TZ=America/New_York \
                 --restart always \
                 "${3}/${4}:${1}"
         fi
     }
-    pull_container "$@"    
+    pull_container "$@"
 else
     echo "Info: No command-line arguments provided." | tee -a "$LOG_FILE"
 
@@ -184,13 +184,14 @@ else
             docker run -itd \
                 --gpus '"device=GPU-fcc90235-d4c3-65e4-f064-446367f1cb5c"' \
                 --network=macvlan255 \
-                --ip 10.0.255.147 \
-                -p 11434:11434 \
-                -v ollama:/root/.ollama \
-                --hostname ollama \
-                --name $CONTAINERNAME \
-                --restart always \
+                --ip 10.0.255.148 \
+                -p 3000:8080 \
+                -v open-webui:/app/backend/data \
+                --hostanme open-webui \
+                --name "$CONTAINERNAME" \
+                -e OLLAMA_BASE_URL=http://ollama:11434/api \
                 -e TZ=America/New_York \
+                --restart always \
                 "${OWNER}/${GH_REPO}:${VERSION}"
         fi
     }
