@@ -16,7 +16,7 @@ set -e
 #VAR2="value2"
 
 # Define functions
-function deploy_macos_monterey() {
+deploy_macos_monterey() {
 docker run -it \
   --device /dev/kvm \
   -p 50922:10022 \

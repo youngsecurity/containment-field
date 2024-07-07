@@ -25,8 +25,8 @@ function deploy_Macvlan() {
 
     docker network create -d $netType \
         --subnet=$subnet \
-        --ip-range=$ipRange \
         --gateway=$gatewayIP \
+        --ip-range=$ipRange \
         -o parent="$infName" $netName
 }
 
