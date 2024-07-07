@@ -14,7 +14,6 @@ echo ""
 #    -e USERNAME="devusr" \
 #    -e PASSWORD="" \
 docker run -itd \
-    --gpus '"device=GPU-fcc90235-d4c3-65e4-f064-446367f1cb5c"' \
     --network=macvlan255 \
     --ip 10.0.255.154 \
     --hostname windows \
@@ -26,7 +25,7 @@ docker run -itd \
     -e VERSION="win11e" \
     -e DISK_SIZE="64G" \
     -e CPU_CORES="4" \
-    -e RAM_SIZE="16" \
+    -e RAM_SIZE="8" \
     --stop-timeout 120 \
     --restart always \
     dockurr/windows
