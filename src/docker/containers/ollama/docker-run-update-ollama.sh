@@ -110,7 +110,6 @@ if [ $# -gt 0 ]; then # if CLI arguments are provided
                 -v ollama:/root/.ollama \
                 --hostname ollama \
                 --name "$6" \
-                --restart always \
                 -e TZ=America/New_York \
                 --restart always \
                 "${3}/${4}:${1}"
