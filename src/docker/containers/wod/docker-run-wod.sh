@@ -23,9 +23,9 @@ docker run -it \
     --cap-add NET_ADMIN \
     -v windows:/storage \
     -v /home/devusr/:/shared \
-    -e VERSION="win10" \
+    -e VERSION="win11e" \
     -e DISK_SIZE="64G" \
-    -e CPU_CORES="2" \
+    -e CPU_CORES="4" \
     -e RAM_SIZE="8G" \
     --stop-timeout 120 \
     --restart always \
