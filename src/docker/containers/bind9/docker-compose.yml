@@ -25,3 +25,11 @@ networks:
      config:
        - subnet: "10.0.255.0/24"
          gateway: 10.0.255.1
+
+volumes:
+  ns1_config:
+    external: true      
+  ns1_cache:
+    external: true
+  ns1_records:
+    external: true
