@@ -28,7 +28,7 @@ networks:
 
 volumes:
   ns1_config:
-    external: true      
+    external: true
   ns1_cache:
     external: true
   ns1_records:
