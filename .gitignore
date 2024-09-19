@@ -484,4 +484,4 @@ FodyWeavers.xsd
 src/hosts/kasm/kasm_release/
 
 # bind9 Zones
-src/docker/containers/bind9/
+src/docker/containers/bind9/ns1*
