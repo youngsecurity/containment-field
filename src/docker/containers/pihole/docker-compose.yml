@@ -15,7 +15,7 @@ services:
       - "81:80/tcp"
     networks:
       macvlan255:
-        ipv4_address: 10.0.255.XX      
+        ipv4_address: 10.0.255.155      
     volumes: # Volumes store your data between container upgrades
       - "~/.local/share/docker/volumes/etc-pihole/_data:/etc/pihole"      
       - "~/.local/share/docker/volumes/etc-dnsmasq.d/_data:/etc/dnsmasq.d"
