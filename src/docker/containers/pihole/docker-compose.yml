@@ -1,12 +1,11 @@
-# More info at https://github.com/pi-hole/docker-pi-hole/ and https://docs.pi-hole.net/
 services:
   pihole:
     container_name: pihole
     image: pihole/pihole:2024.07.0    
     environment:
       #WEBPASSWORD: "set a secure password here or it will be random"
-      TZ: "America/New_York"
-      VIRTUAL_HOST: "pihole"
+      - TZ=America/New_York
+      - VIRTUAL_HOST=pihole
     hostname: pihole
     ports:
       - "53:53/tcp"
@@ -16,12 +15,9 @@ services:
     networks:
       macvlan255:
         ipv4_address: 10.0.255.155      
-    volumes: # Volumes store your data between container upgrades
-      - "~/.local/share/docker/volumes/etc-pihole/_data:/etc/pihole"      
-      - "~/.local/share/docker/volumes/etc-dnsmasq.d/_data:/etc/dnsmasq.d"
-    #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
-    #cap_add:
-    # - NET_ADMIN # Required if you are using Pi-hole as your DHCP server, else not needed
+    volumes:
+      - pihole_etc:/etc/pihole
+      - pihole_etc_dnsmasq.d:/etc/dnsmasq.d
     dns:
       - 127.0.0.1 # Use Pi-Hole as the DNS server for this container
       - 10.0.255.1 # Specify the upstream DNS server as the secondary DNS server for Pi-Hole
@@ -37,7 +33,9 @@ networks:
          gateway: 10.0.255.1
 
 volumes:
-  pihole-etc:
+  pihole_etc:
     external: true
-  pihole-etc-dnsmasq.d:
+  pihole_etc_dnsmasq.d:
     external: true
+
+# More info at https://github.com/pi-hole/docker-pi-hole/ and https://docs.pi-hole.net/
