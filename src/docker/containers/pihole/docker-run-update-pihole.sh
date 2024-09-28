@@ -50,8 +50,8 @@ docker run -itd \
     --hostname pihole \
     -e TZ=America/New_York \
     -e VIRTUAL_HOST="pihole" \
-    -v etc-pihole:/etc/pihole/ \
-    -v etc-dnsmasq.d:/etc/dnsmasq.d/ \
+    -v pihole/etc-pihole:/etc/pihole/ \
+    -v pihole/etc-dnsmasq.d:/etc/dnsmasq.d/ \
     -e PROXY_LOCATION="pihole" \
     pihole/pihole:"$TAG_NAME"
 
