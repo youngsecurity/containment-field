@@ -488,3 +488,4 @@ src/docker/containers/bind9/ns1*
 
 # traefik environment variable file
 src/docker/containers/traefik/.env
+src/docker/containers/traefik/.env
