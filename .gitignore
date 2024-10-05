@@ -485,3 +485,6 @@ FodyWeavers.xsd
 
 # bind9 Zones
 src/docker/containers/bind9/ns1*
+
+# traefik environment variable file
+src/docker/containers/traefik/.env
