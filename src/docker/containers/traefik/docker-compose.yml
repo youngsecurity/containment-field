@@ -1,6 +1,7 @@
 services:
   traefik:
-    image: cgr.dev/chainguard/traefik:latest
+    #image: cgr.dev/chainguard/traefik:latest
+    image: traefik:v3.2
     container_name: traefik
     restart: unless-stopped
     security_opt:
@@ -9,7 +10,8 @@ services:
       macvlan255:
         ipv4_address: 10.0.255.8
     ports:
-      - 80:80       # For HTTP (usually serves HTTP/1.1 traffic)      
+      - 80:80       # For HTTP (usually serves HTTP/1.1 traffic) 
+      - 8080:8080   # Web UI     
       - 443:443/tcp # For HTTPS (HTTP/2 or fallback to HTTP/1.1 via TLS over TCP)
       - 443:443/udp # For HTTP/3 (which runs over QUIC using UDP)
     environment:
@@ -25,6 +27,7 @@ services:
       - ./data/traefik.yml:/traefik.yml:ro
       - ./data/acme.json:/acme.json
       # - ./data/config.yml:/config.yml:ro
+    #user: "${RUNAS_USER_AND_GROUP}"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.entrypoints=http"
@@ -34,12 +37,12 @@ services:
       - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https"
       - "traefik.http.routers.traefik.middlewares=traefik-https-redirect"
       - "traefik.http.routers.traefik-secure.entrypoints=https"
-      - "traefik.http.routers.traefik-secure.rule=${_SECURE_RULE}"
+      - "traefik.http.routers.traefik-secure.rule=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_SECURE_RULE}"
       - "traefik.http.routers.traefik-secure.middlewares=traefik-auth"
       - "traefik.http.routers.traefik-secure.tls=true"
       - "traefik.http.routers.traefik-secure.tls.certresolver=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_SECURE_TLS_CERTRESOLVER}"
       - "traefik.http.routers.traefik-secure.tls.domains[0].main=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_SECURE_TLS_DOMAINS_0_MAIN}"
-      - "traefik.http.routers.traefik-secure.tls.domains[0].sans=${TRAEFIK_HTTP_ROUTERS_TRAEFIK-SECURE_TLS_DOMAINS_0_SANS}"
+      - "traefik.http.routers.traefik-secure.tls.domains[0].sans=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_SECURE_TLS_DOMAINS_0_SANS}"
       - "traefik.http.routers.traefik-secure.service=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_SECURE_SERVICE}"
 
 secrets:

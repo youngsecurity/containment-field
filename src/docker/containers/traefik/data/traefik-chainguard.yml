@@ -1,0 +1,7 @@
+## traefik.yml
+
+
+# API and dashboard configuration. DO NOT RUN IN PROD
+api:
+  insecure: true
+  
