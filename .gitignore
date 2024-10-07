@@ -490,3 +490,4 @@ src/docker/containers/bind9/ns1*
 src/docker/containers/traefik/.env
 src/docker/containers/traefik/cf_api_token.txt
 src/docker/containers/traefik/data/.env
+src/docker/containers/traefik/data/letsencrypt/acme.json

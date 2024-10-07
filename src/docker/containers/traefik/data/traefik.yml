@@ -1,36 +1,63 @@
-api:
-  dashboard: true
-  insecure: true
-  debug: true
+#api:
+#  dashboard: true
+#  insecure: true
+#  debug: true
 entryPoints:
-  http:
+  web:
     address: ":80"
-    http:
-      redirections:
-        entryPoint:
-          to: https
-          scheme: https
-  https:
+
+  websecure:
     address: ":443"
-serversTransport:
-  insecureSkipVerify: true
-providers:
-  docker:
-    endpoint: "unix:///var/run/docker.sock"
-    exposedByDefault: false
+
+certificatesResolvers:
+  myresolver:
+    acme:
+      email: "${EMAIL}"
+      storage: /letsencrypt/acme.json
+      httpChallenge:
+        # used during the challenge
+        entryPoint: web
+
+http:
+  routers:
+    blog:
+      rule: "Host(`home.youngsecurity.net`) && Path(`/`)"
+      tls:
+        certResolver: myresolver
+#entryPoints:
+#  web:
+#    address: ":80"
+#    http:
+#      redirections:
+#        entryPoint:
+#          to: websecure
+#          scheme: https
+#  websecure:
+#    address: ":443"
+#serversTransport:
+#  insecureSkipVerify: true
+#providers:
+#  docker:
+#    endpoint: "unix:///var/run/docker.sock"
+#    exposedByDefault: false
   # file:
   #   filename: /config.yml
-certificatesResolvers:
-  cloudflare:
-    acme:
-      email: "${CLOUDFLARE_EMAIL}"
-      storage: acme.json
+#certificatesResolvers:
+#  youngsecurity:
+#    acme:
+#      email: "${EMAIL}"
+#      storage: /letsencrypt/acme.json
+      
+#  cloudflare:
+#    acme:
+#      email: "${CLOUDFLARE_EMAIL}"
+#      storage: /letsencrypt/acme.json
       # caServer: https://acme-v02.api.letsencrypt.org/directory # prod (default)
-      caServer: https://acme-staging-v02.api.letsencrypt.org/directory # staging
-      dnsChallenge:
-        provider: ${DNS_CHALLENGE_PROVIDER}
-        #disablePropagationCheck: true # uncomment this if you have issues pulling certificates through cloudflare, By setting this flag to true disables the need to wait for the propagation of the TXT record to all authoritative name servers.
+#      caServer: https://acme-staging-v02.api.letsencrypt.org/directory # staging      
+#      dnsChallenge:
+#        provider: ${DNS_CHALLENGE_PROVIDER}
+#        disablePropagationCheck: true # uncomment this if you have issues pulling certificates through cloudflare, By setting this flag to true disables the need to wait for the propagation of the TXT record to all authoritative name servers.
         #delayBeforeCheck: 60s # uncomment along with disablePropagationCheck if needed to ensure the TXT record is ready before verification is attempted 
-        resolvers:
-          - "${DNS_CHALLENGE_RESOLVERS_0}"
-          - "${DNS_CHALLENGE_RESOLVERS_1}"
+#        resolvers:
+#          - "${DNS_CHALLENGE_RESOLVERS_0}"
+#          - "${DNS_CHALLENGE_RESOLVERS_1}"
