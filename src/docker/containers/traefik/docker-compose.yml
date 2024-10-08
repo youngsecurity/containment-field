@@ -5,19 +5,18 @@ services:
     container_name: traefik
     command:
       #- "--log.level=DEBUG"
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
+      #- "--api.insecure=true"
+      #- "--providers.docker=true"
+      #- "--providers.docker.exposedbydefault=false"
       #- "--entryPoints.web.address=:80"
       #- "--entryPoints.websecure.address=:443"
-      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
-      - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      #- "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
       #- "--certificatesresolvers.myresolver.acme.email=${EMAIL}"
       #- "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"      
     ports:
       - "80:80"       # For HTTP (usually serves HTTP/1.1 traffic) 
       - "8080:8080"   # Web UI
-      - "443:443"
       - "443:443/tcp" # For HTTPS (HTTP/2 or fallback to HTTP/1.1 via TLS over TCP)
       - "443:443/udp" # For HTTP/3 (which runs over QUIC using UDP)
     restart: unless-stopped
@@ -36,12 +35,12 @@ services:
     volumes:
       #- /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      #- ./data/traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./data/traefik.yml:/etc/traefik/traefik.yml:ro
       - ./data/letsencrypt:/letsencrypt
       # - ./data/config.yml:/config.yml:ro    
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.traefik.entrypoints=web"
+      #- "traefik.http.routers.traefik.entrypoints=web"
       - "traefik.http.routers.traefik.rule=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_RULE}"
       - "traefik.http.middlewares.traefik-auth.basicauth.users=${TRAEFIK_DASHBOARD_CREDENTIALS}"
       - "traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme=https"
@@ -51,11 +50,10 @@ services:
       - "traefik.http.routers.traefik-secure.rule=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_SECURE_RULE}"
       - "traefik.http.routers.traefik-secure.middlewares=traefik-auth"
       - "traefik.http.routers.traefik-secure.tls=true"
-      #- "traefik.http.routers.traefik-secure.tls.certresolver=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_SECURE_TLS_CERTRESOLVER}"
-      - "traefik.tls.stores.default.defaultgeneratedcert.resolver=myresolver"
-      - "traefik.tls.stores.default.defaultgeneratedcert.domain.main=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_SECURE_TLS_DOMAINS_0_MAIN}"
-      - "traefik.tls.stores.default.defaultgeneratedcert.domain.sans=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_SECURE_TLS_DOMAINS_0_SANS}"
-      #- "traefik.http.routers.traefik-secure.tls.domains[0].sans=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_SECURE_TLS_DOMAINS_0_SANS}"
+      - "traefik.http.routers.traefik-secure.tls.certresolver=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_SECURE_TLS_CERTRESOLVER}"
+      #- "traefik.tls.stores.default.defaultgeneratedcert.resolver=myresolver"
+      - "traefik.http.routers.traefik-secure.tls.domains[0].main=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_SECURE_TLS_DOMAINS_0_MAIN}"
+      - "traefik.http.routers.traefik-secure.tls.domains[0].sans=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_SECURE_TLS_DOMAINS_0_SANS}"
       - "traefik.http.routers.traefik-secure.service=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_SECURE_SERVICE}"
 
   whoami:
@@ -65,7 +63,7 @@ services:
       macvlan255:
     labels:
       - "traefik.enable=true"
-      #- "traefik.http.routers.whoami.entrypoints=web"
+      - "traefik.http.routers.whoami.entrypoints=web"
       - "traefik.http.routers.whoami.entrypoints=websecure"
       - "traefik.http.routers.whoami.rule=Host(`whoami.home.youngsecurity.net`)"
       - "traefik.http.routers.whoami.tls=true"
