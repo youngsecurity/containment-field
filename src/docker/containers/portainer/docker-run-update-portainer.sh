@@ -2,75 +2,111 @@
 
 # .SCRIPT NAME: docker-run-update-container.sh
 # .AUTHOR: Joseph Young <joe@youngsecurity.net>
-# .DATE: 05/18/2024
+# .DATE: 10/31/2024
 # .DOCUMENTATION: 
 #   This script will perform the following tasks:
-#       1. Check and pull the latest version of the container image from GitHub
-#       2. Stop and remove the Docker container
-#       3. Start the Docker container and run it detached, interactive and allocate a pseudo-TTY
+#       1. Check and pull the latest version of the container image
+#       2. Stop and remove the container
+#       3. Start the container and run it detached, interactive and allocate a pseudo-TTY
 # .DESCRIPTION: This is a Docker run shell script to update a container.
-# .EXAMPLE: ./docker-run-update-"$container".sh <arguments>
+# .EXAMPLE: ./ddocker-run-update-container.sh <arguments>
 
-# Exit immediately if a command exits with a non-zero status
-set -e
+set -e # Enable immediate exit on error.
 
-# Main code
-# Notify the user the script has started.
-echo "Starting the script!"
+echo -e "Script is running..." | tee -a "$LOG_FILE" >&2
+echo ""
 
-# Check the source for the latest release version
-VERSION=""
-OWNER="portainer"
-REPO="portainer-ce"
-CONTAINERNAME="portainer"
+LOG_FILE="./run.log" # Log file for errors and output messages.
+# Defaults can be provided via environment files or command-line arguments; prioritize CLI if specified.
+DEFAULTS=(VERSION TAG_NAME OWNER REPO CONTAINERNAME)
+for var in "${DEFAULTS[@]}"; do
+    # shellcheck disable=SC2034  # Unused variables left for readability
+    case $var in
+        VERSION) DEFAULT_VAL=$1;;
+        TAG_NAME) DEFAULT_VAL="${2:-}" ;;
+        OWNER) DEFAULT_VAL="$3" ;;
+        GH_REPO)  DEFAULT_VAL="$4" ;;
+        DOCKER_REPO) DEFAULT_VAL="$5" ;;
+        CONTAINERNAME) DEFAULT_VAL="$6" ;;        
+    esac
+done
 
-# Attempt to fetch the latest release tag name using curl and jq.
-IMAGE_TAG=$(curl -s "https://hub.docker.com/v2/repositories/$OWNER/$REPO/tags/?page=1" | \
-    grep -oP 'linux-amd64-[0-9]+\.[0-9]+\.[0-9]+' | head -n 1) # Extracts only the version number.
+# Source the environment file if it exists.
+ENV_FILE=".env"
+if [ -f "$ENV_FILE" ]; then
+    # shellcheck source=.env
+    source "$ENV_FILE"
+fi
 
-if [ $? -ne 0 ]; then
-    echo "Error: Failed to fetch tags from Docker Hub." >&2
+for var in "${DEFAULTS[@]}"; do
+    eval "CURRENT_VAL=\$$var"
+done
+
+# Function to fetch and parse release information.
+check_source() {
+    if ! TAG=$(curl -s "https://api.github.com/repos/$OWNER/$GH_REPO/releases/latest"); then
+        echo "Error: Failed to get releases information." | tee -a "$LOG_FILE" >&2
+        exit 1
+    fi
+    
+    # Use jq to parse the JSON response and extract tag name if curl succeeded.
+    if [ -n "$TAG" ]; then
+        TAG_NAME=$(echo "$TAG" | jq -r '.tag_name' | sed 's/^v//') # Remove leading 'v' if present.
+    else
+        echo "Error: Failed to parse release information."  | tee -a "$LOG_FILE" >&2
+        exit 1
+    fi
+    
+    if [ -z "$TAG_NAME" ]; then
+        echo "Error: No matching image tag found for $OWNER/$REPO." | tee -a "$LOG_FILE" >&2
+        exit 1
+    else
+        #echo "$TAG_NAME" # Uncomment for debugging
+        # If the command was successful, strip any remaining characters that are not part of the version number (e.g., '-alpine').
+        VERSION=$(echo "$TAG_NAME" | sed 's/.*-//; s/-[a-z]*$//')
+        echo "The latest version is: $VERSION" | tee -a "$LOG_FILE"
+    fi
+}
+
+check_source # Execute the function to check source information.
+
+echo ""
+echo "Pulling image for container: $CONTAINERNAME..."
+if ! docker pull "${OWNER}/${DOCKER_REPO}:${VERSION}"; then
+    echo "Error: Failed to pull Docker Hub image." | tee -a "$LOG_FILE" >&2
     exit 1
 fi
-
-# Check if IMAGE_TAG is not empty, otherwise print an error message and exit.
-if [ -z "$IMAGE_TAG" ]; then
-    echo "Error: No matching image tag found on Docker Hub for $OWNER/$REPO." >&2
-else
-    # If the command was successful, strip any remaining characters that are not part of the version number (e.g., '-alpine').
-    VERSION=$(echo "$IMAGE_TAG" | sed 's/.*-//; s/-[a-z]*$//')
-    echo "$VERSION"
-fi
-
-# Setup the container using specific '.tag_name'
-echo "Pulling container image..."
-docker pull "$OWNER"/"$REPO":"$VERSION"
+echo ""
 
 # Stopping the container
 echo "Stopping the container..."
-docker container stop "$CONTAINERNAME"
+if ! docker container stop "$CONTAINERNAME"; then
+    echo "Error: Failed to stop $CONTAINERNAME" | tee -a "$LOG_FILE" >&2
+    #exit 1
+fi
+echo "Container stopped..."
 
 # Delete existing Pi-hole
 echo "Deleting existing container..."
-docker rm -f "$CONTAINERNAME"
-echo "Container removed!"
+if ! docker rm -f "$CONTAINERNAME"; then
+    echo "Error: Failed to delete $CONTAINERNAME" | tee -a "$LOG_FILE" >&2
+    #exit 1
+fi
+echo "Container removed..."
 
 # Starting up the container...
 echo "Starting up the container..."
 
 docker run -itd \
     --gpus '"device=0,1"' \
-    --network=macvlan255 \
-    --ip 10.0.255.XXX \
     -p 8000:8000 -p 9443:9443 \
     --hostname "$CONTAINERNAME" \
     --name "$CONTAINERNAME" \
-    --restart=unless-stopped \
+    --restart unless-stopped \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v portainer_data:/data \
-    --restart always \
     -e TZ=America/New_York \
-    "$REPO":"$TAG_NAME"
+    "$OWNER"/"$DOCKER_REPO":"$VERSION"
 
-# Notify the user the script has completed.
-echo "Script has finished!"
+# Notify the user that script has finished.
+echo "Script has finished!" | tee -a "$LOG_FILE"
