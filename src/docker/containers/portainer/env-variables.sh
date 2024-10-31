@@ -33,7 +33,7 @@ done
 
 # Function to fetch and parse release information.
 check_source() {
-    if ! TAG=$(curl -s "https://api.github.com/repos/$OWNER/$REPO/releases/latest"); then
+    if ! TAG=$(curl -s "https://api.github.com/repos/$OWNER/$GH_REPO/releases/latest"); then
         echo "Error: Failed to get releases information." | tee -a "$LOG_FILE" >&2
         exit 1
     fi
@@ -62,7 +62,7 @@ check_source # Execute the function to check source information.
 echo ""
 echo "Pulling image for container: $CONTAINERNAME..."
 if ! docker pull "${OWNER}/${DOCKER_REPO}:${VERSION}"; then
-    echo "Error: Failed to pull Docker image." | tee -a "$LOG_FILE" >&2
+    echo "Error: Failed to pull Docker Hub image." | tee -a "$LOG_FILE" >&2
     exit 1
 fi
 echo ""
