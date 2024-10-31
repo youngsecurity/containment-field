@@ -2,7 +2,7 @@
 
 set -e # Enable immediate exit on error.
 
-echo -e "Script is running..."
+echo -e "Script is running..." | tee -a "$LOG_FILE" >&2
 echo ""
 
 LOG_FILE="./run.log" # Log file for errors and output messages.
@@ -42,7 +42,7 @@ check_source() {
     if [ -n "$TAG" ]; then
         TAG_NAME=$(echo "$TAG" | jq -r '.tag_name' | sed 's/^v//') # Remove leading 'v' if present.
     else
-        echo "Error: Failed to parse release information." >&2
+        echo "Error: Failed to parse release information."  | tee -a "$LOG_FILE" >&2
         exit 1
     fi
     
@@ -66,6 +66,36 @@ if ! docker pull "${OWNER}/${DOCKER_REPO}:${VERSION}"; then
     exit 1
 fi
 echo ""
+
+# Stopping the container
+echo "Stopping the container..."
+if ! docker container stop "$CONTAINERNAME"; then
+    echo "Error: Failed to stop $CONTAINERNAME" | tee -a "$LOG_FILE" >&2
+    #exit 1
+fi
+echo "Container stopped..."
+
+# Delete existing Pi-hole
+echo "Deleting existing container..."
+if ! docker rm -f "$CONTAINERNAME"; then
+    echo "Error: Failed to delete $CONTAINERNAME" | tee -a "$LOG_FILE" >&2
+    #exit 1
+fi
+echo "Container removed..."
+
+# Starting up the container...
+echo "Starting up the container..."
+
+docker run -itd \
+    --gpus '"device=0,1"' \
+    -p 8000:8000 -p 9443:9443 \
+    --hostname "$CONTAINERNAME" \
+    --name "$CONTAINERNAME" \
+    --restart unless-stopped \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -v portainer_data:/data \
+    -e TZ=America/New_York \
+    "$OWNER"/"$DOCKER_REPO":"$VERSION"
 
 # Notify the user that script has finished.
 echo "Script has finished!" | tee -a "$LOG_FILE"
