@@ -1,123 +1,123 @@
 {
-    "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
-    "auto_upgrade": true,
-    "blocks": [
-      {
-        "alignment": "left",
-        "segments": [
-          {
-            "foreground": "#7eb8da",
-            "style": "plain",
-            "template": "\u250f[<#ffffff>\ueb99</> {{ .UserName }} from <#ffffff>\uf108</> {{ .HostName }}]",
-            "type": "session"
+  "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+  "blocks": [
+    {
+      "type": "prompt",
+      "alignment": "left",
+      "segments": [
+        {
+          "style": "plain",
+          "template": "\u250f[<#ffffff>\ueb99</> {{ .UserName }} from <#ffffff>\uf108</> {{ .HostName }}]",
+          "foreground": "#7eb8da",
+          "type": "session"
+        },
+        {
+          "properties": {
+            "style": "dallas",
+            "threshold": 0
           },
-          {
-            "foreground": "#be9ddf",
-            "properties": {
-              "style": "dallas",
-              "threshold": 0
-            },
-            "style": "diamond",
-            "template": "[<#ffffff>\uf252</> {{ .FormattedMs }}s]",
-            "type": "executiontime"
+          "style": "diamond",
+          "template": "[<#ffffff>\uf252</> {{ .FormattedMs }}s]",
+          "foreground": "#be9ddf",
+          "type": "executiontime"
+        },
+        {
+          "properties": {
+            "root_icon": "\uf292"
           },
-          {
-            "properties": {
-              "root_icon": "\uf292"
-            },
-            "style": "diamond",
-            "template": "\uf0e7",
-            "type": "root"
+          "style": "diamond",
+          "template": "\uf0e7",
+          "type": "root"
+        },
+        {
+          "style": "diamond",
+          "template": "[<#ffffff>\ue266</> RAM: {{ (div ((sub .PhysicalTotalMemory .PhysicalFreeMemory)|float64) 1073741824.0) }}/{{ (div .PhysicalTotalMemory 1073741824.0) }}GB]",
+          "foreground": "#be9ddf",
+          "type": "sysinfo"
+        },
+        {
+          "properties": {
+            "time_format": "Monday at 3:04:05 PM"
           },
-          {
-            "foreground": "#be9ddf",
-            "style": "diamond",
-            "template": "[<#ffffff>\ue266</> RAM: {{ (div ((sub .PhysicalTotalMemory .PhysicalFreeMemory)|float64) 1073741824.0) }}/{{ (div .PhysicalTotalMemory 1073741824.0) }}GB]",
-            "type": "sysinfo"
+          "style": "diamond",
+          "template": "[<#ffffff>\uf073</> {{ .CurrentDate | date .Format }}]",
+          "foreground": "#7eb8da",
+          "type": "time"
+        },
+        {
+          "style": "diamond",
+          "template": " \ue235 {{ .Full }} ",
+          "foreground": "#00ff37",
+          "type": "python"
+        },
+        {
+          "properties": {
+            "fetch_stash_count": true,
+            "fetch_status": true,
+            "fetch_upstream_icon": true
           },
-          {
-            "foreground": "#7eb8da",
-            "properties": {
-              "time_format": "Monday at 3:04:05 PM"
-            },
-            "style": "diamond",
-            "template": "[<#ffffff>\uf073</> {{ .CurrentDate | date .Format }}]",
-            "type": "time"
+          "style": "plain",
+          "template": "[<#ffffff>{{ .UpstreamIcon }}</>{{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }} <#ffffff>\uf044</> {{ .Working.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }} <#ffffff>\uf046</> {{ .Staging.String }}{{ end }}{{ if gt .StashCount 0 }} <#ffffff>\ueb4b</> {{ .StashCount }}{{ end }}]",
+          "foreground": "#ffa5d8",
+          "type": "git"
+        },
+        {
+          "style": "plain",
+          "template": "[{{ .Profile }}{{if .Region}}@{{ .Region }}{{ end }}]",
+          "foreground": "#ffa5d8",
+          "type": "aws"
+        },
+        {
+          "style": "plain",
+          "template": "[{{.Context}}{{if .Namespace}} :: {{.Namespace}}{{end}}]",
+          "foreground": "#ffa5d8",
+          "type": "kubectl"
+        },
+        {
+          "style": "plain",
+          "template": "[\uf0e7]",
+          "foreground": "#ffa5d8",
+          "type": "root"
+        },
+        {
+          "style": "powerline",
+          "template": "[<#ffffff>\uea6c</> Error, check your command]",
+          "foreground": "#ffa5d8",
+          "type": "status"
+        }
+      ]
+    },
+    {
+      "type": "prompt",
+      "alignment": "left",
+      "segments": [
+        {
+          "properties": {
+            "style": "full"
           },
-          {
-            "type": "python",
-            "style": "diamond",            
-            "foreground": "#00ff37",            
-            "template": "  {{ .Full }} "
-          },
-          {
-            "foreground": "#ffa5d8",
-            "properties": {
-              "fetch_stash_count": true,
-              "fetch_status": true,
-              "fetch_upstream_icon": true
-            },
-            "style": "plain",
-            "template": "[<#ffffff>{{ .UpstreamIcon }}</>{{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }} <#ffffff>\uf044</> {{ .Working.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }} <#ffffff>\uf046</> {{ .Staging.String }}{{ end }}{{ if gt .StashCount 0 }} <#ffffff>\ueb4b</> {{ .StashCount }}{{ end }}]",
-            "type": "git"
-          },
-          {
-            "foreground": "#ffa5d8",
-            "style": "plain",
-            "template": "[{{ .Profile }}{{if .Region}}@{{ .Region }}{{ end }}]",
-            "type": "aws"
-          },
-          {
-            "foreground": "#ffa5d8",
-            "style": "plain",
-            "template": "[{{.Context}}{{if .Namespace}} :: {{.Namespace}}{{end}}]",
-            "type": "kubectl"
-          },
-          {
-            "foreground": "#ffa5d8",
-            "style": "plain",
-            "template": "[\uf0e7]",
-            "type": "root"
-          },
-          {
-            "foreground": "#ffa5d8",
-            "style": "powerline",
-            "template": "[<#ffffff>\uea6c</> Error, check your command]",
-            "type": "status"
-          }
-        ],
-        "type": "prompt"
-      },
-      {
-        "alignment": "left",
-        "newline": true,
-        "segments": [
-          {
-            "foreground": "#7eb8da",
-            "properties": {
-              "style": "full"
-            },
-            "style": "plain",
-            "template": "\u2516[<#98bfad>{{ .Path }}</>]",
-            "type": "path"
-          }
-        ],
-        "type": "prompt"
-      },
-      {
-        "alignment": "left",
-        "newline": true,
-        "segments": [
-          {
-            "foreground": "#7eb8da",
-            "style": "plain",
-            "template": "\u2514\u2500Δ",
-            "type": "text"
-          }
-        ],
-        "type": "prompt"
-      }
-    ],
-    "final_space": true,
-    "version": 2
-  }
+          "style": "plain",
+          "template": "\u2516[<#98bfad>{{ .Path }}</>]",
+          "foreground": "#7eb8da",
+          "type": "path"
+        }
+      ],
+      "newline": true
+    },
+    {
+      "type": "prompt",
+      "alignment": "left",
+      "segments": [
+        {
+          "style": "plain",
+          "template": "\u2514\u2500Δ",
+          "foreground": "#7eb8da",
+          "type": "text"
+        }
+      ],
+      "newline": true
+    }
+  ],
+  "version": 3,
+  "auto_upgrade": true,
+  "final_space": true
+}
