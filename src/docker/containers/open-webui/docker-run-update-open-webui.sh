@@ -2,7 +2,7 @@
 
 # .SCRIPT NAME: docker-run-update-container.sh
 # .AUTHOR: Joseph Young <joe@youngsecurity.net>
-# .DATE: 06/19/2024
+# .DATE: 01/12/2025
 # .DOCUMENTATION: 
 #   This script will perform the following tasks:
 #       1. Check and pull the latest version of the container image from GitHub
@@ -20,7 +20,7 @@ echo ""
 
 LOG_FILE="./run.log" # Log file for errors and output messages.
 # Defaults can be provided via environment files or command-line arguments; prioritize CLI if specified.
-DEFAULTS=(VERSION TAG_NAME OWNER GH_REPO CONTAINERNAME)
+DEFAULTS=(VERSION TAG_NAME OWNER GH_REPO DOCKER_REPO CONTAINERNAME)
 for var in "${DEFAULTS[@]}"; do
     # shellcheck disable=SC2034  # Unused variables left for readability
     case $var in
@@ -107,7 +107,7 @@ if [ $# -gt 0 ]; then # if CLI arguments are provided
                 --gpus '"device=GPU-fcc90235-d4c3-65e4-f064-446367f1cb5c"' \
                 --network=macvlan255 \
                 --ip 10.0.255.148 \
-                -p 3000:8080 \
+                -p 3000:80 \
                 -v open-webui:/app/backend/data \
                 --hostname open-webui \
                 --name "$6" \
@@ -122,7 +122,7 @@ else
     echo "Info: No command-line arguments provided." | tee -a "$LOG_FILE"
 
     # Source the environment file if it exists and exit if it does not.
-    ENV_FILE=".env"
+    ENV_FILE="./.env"
     if [ -f "$ENV_FILE" ]; then
         # shellcheck source=.env
         source "$ENV_FILE"
@@ -162,7 +162,7 @@ else
             echo "" >> $LOG_FILE
         fi
     }
-    check_source
+    check_source "$@"
 
     pull_container(){
         echo ""
@@ -186,7 +186,7 @@ else
                 --gpus '"device=GPU-fcc90235-d4c3-65e4-f064-446367f1cb5c"' \
                 --network=macvlan255 \
                 --ip 10.0.255.148 \
-                -p 3000:8080 \
+                -p 3000:80 \
                 -v open-webui:/app/backend/data \
                 --hostname open-webui \
                 --name "$CONTAINERNAME" \

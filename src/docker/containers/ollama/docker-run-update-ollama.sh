@@ -20,7 +20,7 @@ echo ""
 
 LOG_FILE="./run.log" # Log file for errors and output messages.
 # Defaults can be provided via environment files or command-line arguments; prioritize CLI if specified.
-DEFAULTS=(VERSION TAG_NAME OWNER GH_REPO CONTAINERNAME)
+DEFAULTS=(VERSION TAG_NAME OWNER GH_REPO DOCKER_REPO CONTAINERNAME)
 for var in "${DEFAULTS[@]}"; do
     # shellcheck disable=SC2034  # Unused variables left for readability
     case $var in
@@ -120,7 +120,7 @@ else
     echo "Info: No command-line arguments provided." | tee -a "$LOG_FILE"
 
     # Source the environment file if it exists and exit if it does not.
-    ENV_FILE=".env"
+    ENV_FILE="./.env"
     if [ -f "$ENV_FILE" ]; then
         # shellcheck source=.env
         source "$ENV_FILE"
