@@ -91,11 +91,12 @@ if [ $# -gt 0 ]; then # if CLI arguments are provided
 
     check_exists() {
         # Attempt to use Docker commands and check if the container exists already.
-        if docker ps -a --filter "name=$6" --format '{{.Names}}' | grep -w "$6" > /dev/null; then
-            echo "Container '$6' already exists. Exiting..." | tee -a "$LOG_FILE"
+        if docker ps -a --filter "name=$6" --filter "ancestor=${3}/${4}:${1}" --format '{{.Names}}' | grep -w "$6" > /dev/null; then
+            echo "Container '$6' with image '${3}/${4}:${1}' already exists. Exiting..." | tee -a "$LOG_FILE"           
+            echo "" | tee -a "$LOG_FILE"
             exit 0
         else
-            echo "Container '$6' does not exist." | tee -a "$LOG_FILE"
+            echo "Container '$6' with image '${3}/${4}:${1}' does not exist."
             # Place additional logic here if needed
         fi
     }
@@ -105,8 +106,8 @@ if [ $# -gt 0 ]; then # if CLI arguments are provided
         echo ""
         echo "Pulling image for container: $6..."
         echo ""
-        echo "From: ghcr.io/$3"/"$4":"$1" # Useful for debugging
-        if ! docker pull "ghcr.io/${3}/${4}:${1}"; then
+        echo "From: /$3"/"$4":"$1" # Useful for debugging
+        if ! docker pull "${3}/${4}:${1}"; then
             echo "Error: Failed to pull Docker image." | tee -a "$LOG_FILE" >&2
             echo "" >> $LOG_FILE
             exit 1
@@ -117,7 +118,7 @@ if [ $# -gt 0 ]; then # if CLI arguments are provided
             echo "Deleting existing container..."
             docker rm -f "$6"
             echo "$6 removed!"      
-            echo "Starting up $6..."            
+            echo "Starting up $6..."
 
             docker run -itd \
                 --gpus '"device=GPU-fcc90235-d4c3-65e4-f064-446367f1cb5c"' \
@@ -180,12 +181,12 @@ else
 
     check_exists() {
         # Attempt to use Docker commands and check if the container exists already.
-        if docker ps -a --filter "name=$CONTAINERNAME" --format '{{.Names}}' | grep -w "$CONTAINERNAME" > /dev/null; then
-            echo "Container '$CONTAINERNAME' already exists. Exiting..." | tee -a "$LOG_FILE"
+        if docker ps -a --filter "name=$CONTAINERNAME" --filter "ancestor=${OWNER}/${GH_REPO}:${VERSION}" --format '{{.Names}}' | grep -w "$CONTAINERNAME" > /dev/null; then
+            echo "Container '$CONTAINERNAME' with image '${OWNER}/${GH_REPO}:${VERSION}' already exists. Exiting..." | tee -a "$LOG_FILE"
             echo "" | tee -a "$LOG_FILE"
             exit 0
         else
-            echo "Container '$CONTAINERNAME' does not exist." | tee -a "$LOG_FILE"
+            echo "Container '$CONTAINERNAME' with image '${OWNER}/${GH_REPO}:${VERSION}' does not exist."
             # Place additional logic here if needed
         fi
     }
