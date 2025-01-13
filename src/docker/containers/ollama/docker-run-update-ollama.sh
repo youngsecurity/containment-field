@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# .SCRIPT NAME: docker-run-update-container.sh
+# .SCRIPT NAME: docker-run-update-"$container".sh
 # .AUTHOR: Joseph Young <joe@youngsecurity.net>
-# .DATE: 06/19/2024
+# .DATE: 01/12/2025
 # .DOCUMENTATION: 
 #   This script will perform the following tasks:
 #       1. Check and pull the latest version of the container image from GitHub
@@ -19,7 +19,11 @@ echo -e "Script is running..."
 echo ""
 
 LOG_FILE="./run.log" # Log file for errors and output messages.
-# Defaults can be provided via environment files or command-line arguments; prioritize CLI if specified.
+
+# Source the environment file if it exists and exit if it does not.
+ENV_FILE="./.env"
+
+# Defaults can be provided via environment file, command-line arguments, or hardcoded; prioritize CLI if specified.
 DEFAULTS=(VERSION TAG_NAME OWNER GH_REPO DOCKER_REPO CONTAINERNAME)
 for var in "${DEFAULTS[@]}"; do
     # shellcheck disable=SC2034  # Unused variables left for readability
@@ -85,10 +89,24 @@ if [ $# -gt 0 ]; then # if CLI arguments are provided
     }
     check_source "$@"
 
+    check_exists() {
+        # Attempt to use Docker commands and check if the container exists already.
+        if docker ps -a --filter "name=$6" --format '{{.Names}}' | grep -w "$6" > /dev/null; then
+            echo "Container '$6' already exists. Exiting..." | tee -a "$LOG_FILE"
+            echo "" | tee -a "$LOG_FILE"
+            exit 0
+        else
+            echo "Container '$6' does not exist." | tee -a "$LOG_FILE"
+            # Place additional logic here if needed
+        fi
+    }
+    check_exists "$@"
+
     pull_container(){
         echo ""
         echo "Pulling image for container: $6..."
-        echo ""        
+        echo ""
+        echo "From: /$3"/"$4":"$1" # Useful for debugging
         if ! docker pull "${3}/${4}:${1}"; then
             echo "Error: Failed to pull Docker image." | tee -a "$LOG_FILE" >&2
             echo "" >> $LOG_FILE
@@ -118,17 +136,15 @@ if [ $# -gt 0 ]; then # if CLI arguments are provided
     pull_container "$@"    
 else
     echo "Info: No command-line arguments provided." | tee -a "$LOG_FILE"
-
-    # Source the environment file if it exists and exit if it does not.
-    ENV_FILE="./.env"
+ 
     if [ -f "$ENV_FILE" ]; then
-        # shellcheck source=.env
+        # shellcheck source=./.env
         source "$ENV_FILE"
     else
-        echo "Info: No .env loaded" | tee -a "$LOG_FILE"
+        echo "Info: No .env located" | tee -a "$LOG_FILE"
         echo "Error: Variables must be provided." | tee -a "$LOG_FILE"
         echo "" >> $LOG_FILE
-        echo "Script has finished with errors, check \"run.log\"!"    
+        echo 'Script has finished with errors, check "./run.log"'
         exit 1
     fi
 
@@ -160,7 +176,20 @@ else
             echo "" >> $LOG_FILE
         fi
     }
-    check_source
+    check_source "$@"
+
+    check_exists() {
+        # Attempt to use Docker commands and check if the container exists already.
+        if docker ps -a --filter "name=$CONTAINERNAME" --format '{{.Names}}' | grep -w "$CONTAINERNAME" > /dev/null; then
+            echo "Container '$CONTAINERNAME' already exists. Exiting..." | tee -a "$LOG_FILE"
+            echo "" | tee -a "$LOG_FILE"
+            exit 0
+        else
+            echo "Container '$CONTAINERNAME' does not exist." | tee -a "$LOG_FILE"
+            # Place additional logic here if needed
+        fi
+    }
+    check_exists "$@"
 
     pull_container(){
         echo ""
@@ -193,7 +222,7 @@ else
                 "${OWNER}/${GH_REPO}:${VERSION}"
         fi
     }
-    pull_container
+    pull_container "$@"
 
 echo ""
 fi

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# .SCRIPT NAME: docker-run-update-container.sh
+# .SCRIPT NAME: docker-run-update-"$container".sh
 # .AUTHOR: Joseph Young <joe@youngsecurity.net>
-# .DATE: 05/18/2024
+# .DATE: 01/12/2025
 # .DOCUMENTATION: 
 #   This script will perform the following tasks:
 #       1. Check and pull the latest version of the container image from GitHub
@@ -21,11 +21,11 @@ echo "Starting the script!"
 # Check the source for the latest release version
 VERSION=""
 OWNER="portainer"
-REPO="portainer-ce"
+DOCKER_REPO="portainer-ce"
 CONTAINERNAME="portainer"
 
 # Attempt to fetch the latest release tag name using curl and jq.
-IMAGE_TAG=$(curl -s "https://hub.docker.com/v2/repositories/$OWNER/$REPO/tags/?page=1" | \
+IMAGE_TAG=$(curl -s "https://hub.docker.com/v2/repositories/$OWNER/$DOCKER_REPO/tags/?page=1" | \
     grep -oP 'linux-amd64-[0-9]+\.[0-9]+\.[0-9]+' | head -n 1) # Extracts only the version number.
 
 if [ $? -ne 0 ]; then
@@ -44,7 +44,7 @@ fi
 
 # Setup the container using specific '.tag_name'
 echo "Pulling container image..."
-docker pull "$OWNER"/"$REPO":"$VERSION"
+docker pull "$OWNER"/"$DOCKER_REPO":"$VERSION"
 
 # Stopping the container
 echo "Stopping the container..."
@@ -70,7 +70,7 @@ docker run -itd \
     -v portainer_data:/data \
     --restart always \
     -e TZ=America/New_York \
-    "$REPO":"$TAG_NAME"
+    "$DOCKER_REPO":"$TAG_NAME"
 
 # Notify the user the script has completed.
 echo "Script has finished!"

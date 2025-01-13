@@ -1,15 +1,15 @@
 #!/bin/bash
 
-# .SCRIPT NAME: docker-run-update-container.sh
+# .SCRIPT NAME: docker-run-update-"$container".sh
 # .AUTHOR: Joseph Young <joe@youngsecurity.net>
-# .DATE: 10/31/2024
+# .DATE: 01/12/2025
 # .DOCUMENTATION: 
 #   This script will perform the following tasks:
-#       1. Check and pull the latest version of the container image
-#       2. Stop and remove the container
-#       3. Start the container and run it detached, interactive and allocate a pseudo-TTY
+#       1. Check and pull the latest version of the container image from GitHub
+#       2. Stop and remove the Docker container
+#       3. Start the Docker container and run it detached, interactive and allocate a pseudo-TTY
 # .DESCRIPTION: This is a Docker run shell script to update a container.
-# .EXAMPLE: ./ddocker-run-update-container.sh <arguments>
+# .EXAMPLE: ./docker-run-update-"$container".sh <arguments>
 
 # Exit immediately if a command exits with a non-zero status
 set -e
@@ -19,7 +19,8 @@ echo -e "Script is running..."
 echo ""
 
 LOG_FILE="./run.log" # Log file for errors and output messages.
-# Defaults can be provided via environment files or command-line arguments; prioritize CLI if specified.
+
+# Defaults can be provided via environment file, command-line arguments, or hardcoded; prioritize CLI if specified.
 DEFAULTS=(VERSION TAG_NAME OWNER GH_REPO DOCKER_REPO CONTAINERNAME)
 for var in "${DEFAULTS[@]}"; do
     # shellcheck disable=SC2034  # Unused variables left for readability
