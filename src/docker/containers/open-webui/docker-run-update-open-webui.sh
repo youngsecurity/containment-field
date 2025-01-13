@@ -92,11 +92,11 @@ if [ $# -gt 0 ]; then # if CLI arguments are provided
     check_exists() {
         # Attempt to use Docker commands and check if the container exists already.
         if docker ps -a --filter "name=$6" --filter "ancestor=${3}/${4}:${1}" --format '{{.Names}}' | grep -w "$6" > /dev/null; then
-            echo "Container '$6' with image '${3}/${4}:${1}' already exists. Exiting..." | tee -a "$LOG_FILE"           
+            echo "Container '$6' with image '${4}:${1}' already exists. Exiting..." | tee -a "$LOG_FILE"           
             echo "" | tee -a "$LOG_FILE"
             exit 0
         else
-            echo "Container '$6' with image '${3}/${4}:${1}' does not exist."
+            echo "Container '$6' with image '${4}:${1}' does not exist."
             # Place additional logic here if needed
         fi
     }
@@ -106,7 +106,7 @@ if [ $# -gt 0 ]; then # if CLI arguments are provided
         echo ""
         echo "Pulling image for container: $6..."
         echo ""
-        echo "From: /$3"/"$4":"$1" # Useful for debugging
+        echo "From: ghcr.io/$3"/"$4":"$1" # Useful for debugging
         if ! docker pull "${3}/${4}:${1}"; then
             echo "Error: Failed to pull Docker image." | tee -a "$LOG_FILE" >&2
             echo "" >> $LOG_FILE
@@ -181,12 +181,19 @@ else
 
     check_exists() {
         # Attempt to use Docker commands and check if the container exists already.
-        if docker ps -a --filter "name=$CONTAINERNAME" --filter "ancestor=${OWNER}/${GH_REPO}:${VERSION}" --format '{{.Names}}' | grep -w "$CONTAINERNAME" > /dev/null; then
-            echo "Container '$CONTAINERNAME' with image '${OWNER}/${GH_REPO}:${VERSION}' already exists. Exiting..." | tee -a "$LOG_FILE"
+        if docker ps -a --filter "name=$CONTAINERNAME" --filter "ancestor=ghcr.io/${OWNER}/${GH_REPO}:${VERSION}" --format '{{.Names}}' | grep -w "$CONTAINERNAME" > /dev/null; then
+            echo "Container '$CONTAINERNAME' with image 'ghcr.io/${OWNER}/${GH_REPO}:${VERSION}' already exists." | tee -a "$LOG_FILE"
             echo "" | tee -a "$LOG_FILE"
-            exit 0
+            echo "Stopping the container..."
+            if ! docker container stop "$CONTAINERNAME"; then
+                echo "Error: Failed to stop the container." | tee -a "$LOG_FILE" >&2
+                echo "" >> $LOG_FILE                
+                exit 1
+            else
+                echo "Container stopped..."
+            fi
         else
-            echo "Container '$CONTAINERNAME' with image '${OWNER}/${GH_REPO}:${VERSION}' does not exist."
+            echo "Container '$CONTAINERNAME' with image '${OWNER}/${GH_REPO}:${VERSION}' does not exist."            
             # Place additional logic here if needed
         fi
     }
@@ -196,27 +203,23 @@ else
         echo ""
         echo "Pulling image for container: $CONTAINERNAME..."
         echo ""
-        echo "ghcr.io/$OWNER"/"$GH_REPO":"$VERSION" # Useful for debugging
+        echo "From: ghcr.io/""$OWNER"/"$GH_REPO":"$VERSION" # Useful for debugging
         if ! docker pull "ghcr.io/${OWNER}/${GH_REPO}:${VERSION}"; then
             echo "Error: Failed to pull Docker image." | tee -a "$LOG_FILE" >&2
             echo "" >> $LOG_FILE
             exit 1
         else
-            echo "Stopping the container..."
-            docker container stop "$CONTAINERNAME"
-
             echo "Deleting existing container..."
             docker rm -f "$CONTAINERNAME"
-            echo "$CONTAINERNAME removed!"      
-            echo "Starting up $CONTAINERNAME..."            
-
+            echo "$CONTAINERNAME removed!"
+            echo "Starting up $CONTAINERNAME..."
             docker run -itd \
                 --gpus '"device=GPU-fcc90235-d4c3-65e4-f064-446367f1cb5c"' \
                 --network=macvlan255 \
                 --ip 10.0.255.148 \
                 -p 3000:80 \
                 -v open-webui:/app/backend/data \
-                --hostname open-webui \
+                --hostname "$CONTAINERNAME" \
                 --name "$CONTAINERNAME" \
                 -e OLLAMA_BASE_URL=http://ollama:11434 \
                 -e TZ=America/New_York \

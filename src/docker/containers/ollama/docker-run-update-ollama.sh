@@ -195,7 +195,7 @@ else
         echo ""
         echo "Pulling image for container: $CONTAINERNAME..."
         echo ""
-        #echo "$OWNER"/"$REPO":"$VERSION" # Useful for debugging
+        echo "From: ""$OWNER"/"$REPO":"$VERSION" # Useful for debugging
         if ! docker pull "${OWNER}/${GH_REPO}:${VERSION}"; then
             echo "Error: Failed to pull Docker image." | tee -a "$LOG_FILE" >&2
             echo "" >> $LOG_FILE
@@ -215,7 +215,7 @@ else
                 --ip 10.0.255.147 \
                 -p 11434:11434 \
                 -v ollama:/root/.ollama \
-                --hostname ollama \
+                --hostname $CONTAINERNAME \
                 --name $CONTAINERNAME \
                 --restart always \
                 -e TZ=America/New_York \
