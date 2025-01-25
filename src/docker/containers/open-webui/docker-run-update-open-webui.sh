@@ -125,8 +125,8 @@ if [ $# -gt 0 ]; then # if CLI arguments are provided
                 --network=macvlan255 \
                 --ip 10.0.255.148 \
                 -p 3000:80 \
-                -v open-webui:/app/backend/data \
-                --hostname open-webui \
+                -v "${6}":/app/backend/data \
+                --hostname "${6}" \
                 --name "$6" \
                 -e OLLAMA_BASE_URL=http://ollama:11434 \
                 -e TZ=America/New_York \

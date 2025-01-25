@@ -20,6 +20,9 @@ echo ""
 
 LOG_FILE="./run.log" # Log file for errors and output messages.
 
+# Source the environment file if it exists and exit if it does not.
+ENV_FILE="./.env"
+
 # Defaults can be provided via environment file, command-line arguments, or hardcoded; prioritize CLI if specified.
 DEFAULTS=(VERSION TAG_NAME OWNER GH_REPO DOCKER_REPO CONTAINERNAME)
 for var in "${DEFAULTS[@]}"; do
@@ -86,6 +89,19 @@ if [ $# -gt 0 ]; then # if CLI arguments are provided
     }
     check_source "$@"
 
+    check_exists() {
+        # Attempt to use Docker commands and check if the container exists already.
+        if docker ps -a --filter "name=$6" --filter "ancestor=${3}/${4}:${1}" --format '{{.Names}}' | grep -w "$6" > /dev/null; then
+            echo "Container '$6' with image '${4}:${1}' already exists. Exiting..." | tee -a "$LOG_FILE"           
+            echo "" | tee -a "$LOG_FILE"
+            exit 0
+        else
+            echo "Container '$6' with image '${4}:${1}' does not exist."
+            # Place additional logic here if needed
+        fi
+    }
+    check_exists "$@"
+
     pull_container(){
         echo ""
         echo "Pulling image for container: $6..."
@@ -122,8 +138,6 @@ if [ $# -gt 0 ]; then # if CLI arguments are provided
 else
     echo "Info: No command-line arguments provided." | tee -a "$LOG_FILE"
 
-    # Source the environment file if it exists and exit if it does not.
-    ENV_FILE="./.env"
     if [ -f "$ENV_FILE" ]; then
         # shellcheck source=.env
         source "$ENV_FILE"
@@ -165,83 +179,58 @@ else
     }
     check_source "$@"
 
+    check_exists() {
+        # Attempt to use Docker commands and check if the container exists already.
+        if docker ps -a --filter "name=$CONTAINERNAME" --filter "ancestor=ghcr.io/${OWNER}/${GH_REPO}:${VERSION}" --format '{{.Names}}' | grep -w "$CONTAINERNAME" > /dev/null; then
+            echo "Container '$CONTAINERNAME' with image 'ghcr.io/${OWNER}/${GH_REPO}:${VERSION}' already exists." | tee -a "$LOG_FILE"
+            echo "" | tee -a "$LOG_FILE"
+            echo "Stopping the container..."
+            if ! docker container stop "$CONTAINERNAME"; then
+                echo "Error: Failed to stop the container." | tee -a "$LOG_FILE" >&2
+                echo "" >> $LOG_FILE                
+                exit 1
+            else
+                echo "Container stopped..."
+            fi
+        else
+            echo "Container '$CONTAINERNAME' with image '${OWNER}/${GH_REPO}:${VERSION}' does not exist."            
+            # Place additional logic here if needed
+        fi
+    }
+    check_exists "$@"
 
-# Source the environment file if it exists.
-ENV_FILE=".env"
-if [ -f "$ENV_FILE" ]; then
-    # shellcheck source=.env
-    source "$ENV_FILE"
-fi
-
-for var in "${DEFAULTS[@]}"; do
-    eval "CURRENT_VAL=\$$var"
-done
-
-# Function to fetch and parse release information.
-check_source() {
-    if ! TAG=$(curl -s "https://api.github.com/repos/$OWNER/$GH_REPO/releases/latest"); then
-        echo "Error: Failed to get releases information." | tee -a "$LOG_FILE" >&2
-        exit 1
-    fi
-    
-    # Use jq to parse the JSON response and extract tag name if curl succeeded.
-    if [ -n "$TAG" ]; then
-        TAG_NAME=$(echo "$TAG" | jq -r '.tag_name' | sed 's/^v//') # Remove leading 'v' if present.
-    else
-        echo "Error: Failed to parse release information."  | tee -a "$LOG_FILE" >&2
-        exit 1
-    fi
-    
-    if [ -z "$TAG_NAME" ]; then
-        echo "Error: No matching image tag found for $OWNER/$REPO." | tee -a "$LOG_FILE" >&2
-        exit 1
-    else
-        #echo "$TAG_NAME" # Uncomment for debugging
-        # If the command was successful, strip any remaining characters that are not part of the version number (e.g., '-alpine').
-        VERSION=$(echo "$TAG_NAME" | sed 's/.*-//; s/-[a-z]*$//')
-        echo "The latest version is: $VERSION" | tee -a "$LOG_FILE"
-    fi
-}
-
-check_source # Execute the function to check source information.
+    pull_container(){
+        echo ""
+        echo "Pulling image for container: $CONTAINERNAME..."
+        echo ""
+        echo "From: ghcr.io/""$OWNER"/"$GH_REPO":"$VERSION" # Useful for debugging
+        if ! docker pull "ghcr.io/${OWNER}/${GH_REPO}:${VERSION}"; then
+            echo "Error: Failed to pull Docker image." | tee -a "$LOG_FILE" >&2
+            echo "" >> $LOG_FILE
+            exit 1
+        else
+            echo "Deleting existing container..."
+            docker rm -f "$CONTAINERNAME"
+            echo "$CONTAINERNAME removed!"
+            echo "Starting up $CONTAINERNAME..."
+            docker run -itd \
+                --gpus '"device=GPU-fcc90235-d4c3-65e4-f064-446367f1cb5c"' \
+                --network=macvlan255 \
+                --ip 10.0.255.148 \
+                -p 3000:80 \
+                -v open-webui:/app/backend/data \
+                --hostname "$CONTAINERNAME" \
+                --name "$CONTAINERNAME" \
+                -e OLLAMA_BASE_URL=http://ollama:11434 \
+                -e TZ=America/New_York \
+                --restart always \
+                "ghcr.io/${OWNER}/${GH_REPO}:${VERSION}"
+        fi
+    }
+    pull_container "$@"
 
 echo ""
-echo "Pulling image for container: $CONTAINERNAME..."
-if ! docker pull "${OWNER}/${DOCKER_REPO}:${VERSION}"; then
-    echo "Error: Failed to pull Docker Hub image." | tee -a "$LOG_FILE" >&2
-    exit 1
 fi
-echo ""
 
-# Stopping the container
-echo "Stopping the container..."
-if ! docker container stop "$CONTAINERNAME"; then
-    echo "Error: Failed to stop $CONTAINERNAME" | tee -a "$LOG_FILE" >&2
-    #exit 1
-fi
-echo "Container stopped..."
-
-# Delete existing Pi-hole
-echo "Deleting existing container..."
-if ! docker rm -f "$CONTAINERNAME"; then
-    echo "Error: Failed to delete $CONTAINERNAME" | tee -a "$LOG_FILE" >&2
-    #exit 1
-fi
-echo "Container removed..."
-
-# Starting up the container...
-echo "Starting up the container..."
-
-docker run -itd \
-    --gpus '"device=0,1"' \
-    -p 8000:8000 -p 9443:9443 \
-    --hostname "$CONTAINERNAME" \
-    --name "$CONTAINERNAME" \
-    --restart unless-stopped \
-    -v /var/run/docker.sock:/var/run/docker.sock \
-    -v portainer_data:/data \
-    -e TZ=America/New_York \
-    "$OWNER"/"$DOCKER_REPO":"$VERSION"
-
-# Notify the user that script has finished.
-echo "Script has finished!" | tee -a "$LOG_FILE"
+# Notify the user the script has completed.
+echo "Script has finished!"
