@@ -141,7 +141,7 @@ else
         source "$ENV_FILE"
     else
         echo "Info: No .env located" | tee -a "$LOG_FILE"
-        echo "Error: Variables must be provided." | tee -a "$LOG_FILE"
+        echo "Error: Variables must be provided." | tee -a "$LOG_FILE" >&2
         echo "" >> $LOG_FILE
         echo 'Script has finished with errors, check "./run.log"'
         exit 1

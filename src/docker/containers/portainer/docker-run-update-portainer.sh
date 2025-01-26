@@ -43,6 +43,7 @@ done
 
 # Check, log & debug arguments & variables
 if [ $# -gt 0 ]; then # if CLI arguments are provided
+    echo "" | tee -a "$LOG_FILE"
     echo "Info: Command-line arguments were provided." | tee -a "$LOG_FILE"
     echo "Info: Command: $0" >> $LOG_FILE
     #VERSION=""
@@ -60,42 +61,25 @@ if [ $# -gt 0 ]; then # if CLI arguments are provided
 
     check_source() {
         # Attempt to fetch the latest release tag name using curl and jq.
-        if ! TAG=$(curl -s "https://api.github.com/repos/$3/$4/releases/latest"); then
-            echo "TAG using curl is: $TAG" >> $LOG_FILE
+        if ! TAG=$(curl -s "https://hub.docker.com/v2/repositories/$3/$5/tags?page_size=100" | jq -r '.results[].name' | grep -E '^v?[0-9]+\.[0-9]+\.[0-9]+$' | sed 's/^v//' | sort -V | tail -n1); then
+            echo "TAG using curl is: $TAG" >> $LOG_FILE # useful for debugging
             echo "Error: Failed to get releases information."  | tee -a "$LOG_FILE" >&2
             echo "" >> $LOG_FILE
             exit 1
-        fi
-
-        # Use jq to parse the JSON response and extract tag name if curl succeeded.
-        if [ -n "$TAG" ]; then
-            TAG_NAME=$(echo "$TAG" | jq -r '.tag_name' | sed 's/^v//') # Remove leading 'v' if present.
-            echo "Info: curl TAG_NAME: $TAG_NAME" >> $LOG_FILE
-        else
-            echo "Error: Failed to parse release information." >&2
-            exit 1
-        fi
-
-        # Output the tag name or an error message if not found.
-        if [ -z "$TAG_NAME" ]; then
-            echo "Error: No matching image tag found for $3/$4."  | tee -a "$LOG_FILE" >&2
-            exit 1
-        else            
-            # If the command was successful, strip any remaining characters that are not part of the version number (e.g., '-alpine').
-            VERSION=$(echo "$TAG_NAME" | sed 's/.*-//; s/-[a-z]*$//')
-            echo "Info: Latest version using curl is: $VERSION" | tee -a "$LOG_FILE"
         fi
     }
     check_source "$@"
 
     check_exists() {
+        echo "Latest TAG using curl is: $TAG" >> $LOG_FILE # useful for debugging
         # Attempt to use Docker commands and check if the container exists already.
-    if docker ps -a --filter "name=$6" --filter "ancestor=${3}/${5}:${VERSION}" --format '{{.Names}}' | grep -w "$6" > /dev/null; then    
-            echo "Container '$6' with image '${4}:${1}' already exists. Exiting..." | tee -a "$LOG_FILE"           
+        if docker ps -a --filter "name=$6" --filter "ancestor=${3}/${5}:${1}" --format '{{.Names}}' | grep -w "$6" > /dev/null; then    
+            echo "Container '$6' with image '${5}:${1}' already exists. Exiting..." | tee -a "$LOG_FILE"           
             echo "" | tee -a "$LOG_FILE"
             exit 0
         else
-            echo "Container '$6' with image '${5}:${VERSION}' does not exist." | tee -a "$LOG_FILE"            
+            echo "Container '$6' with image '${3}/${5}:${1}' does not exist." | tee -a "$LOG_FILE"
+            echo "" | tee -a "$LOG_FILE"
         fi
     }
     check_exists "$@"
@@ -104,13 +88,14 @@ if [ $# -gt 0 ]; then # if CLI arguments are provided
         echo ""
         echo "Pulling image for container: $6..."
         echo ""
-        echo "Registry: /$3"/"$4":"$1" # Useful for debugging
-        if ! docker pull "ghcr.io/${3}/${4}:${1}"; then
+        echo "Registry: $3/$5:$1"  | tee -a "$LOG_FILE" >&2 # Useful for debugging
+        if ! docker pull "${3}/${5}:${1}"; then
             echo "Error: Failed to pull Docker image." | tee -a "$LOG_FILE" >&2
             echo "" >> $LOG_FILE
             exit 1
         else
             echo "Stopping the container..."
+            
             docker container stop "$6"
 
             echo "Deleting existing container..."
@@ -120,16 +105,14 @@ if [ $# -gt 0 ]; then # if CLI arguments are provided
 
             docker run -itd \
                 --gpus '"device=GPU-fcc90235-d4c3-65e4-f064-446367f1cb5c"' \
-                --network=macvlan255 \
-                --ip 10.0.255.148 \
-                -p 3000:8080 \
-                -v open-webui:/app/backend/data \
-                --hostname open-webui \
+                -p 8000:8000 -p 9443:9443 \
+                --hostname "$6" \
                 --name "$6" \
-                -e OLLAMA_BASE_URL=http://ollama:11434 \
+                -v /var/run/docker.sock:/var/run/docker.sock \
+                -v portainer_data:/data \
                 -e TZ=America/New_York \
-                --restart always \
-                "ghcr.io/${3}/${4}:${1}"
+                --restart=unless-stopped \
+                "${3}/${5}:${1}"
         fi
     }
     pull_container "$@"
@@ -149,50 +132,25 @@ else
 
     check_source() {
         # Attempt to fetch the latest release tag name using curl and jq.
-        if ! TAG=$(curl -s "https://api.github.com/repos/$OWNER/$GH_REPO/releases/latest"); then
+        if ! TAG=$(curl -s "https://hub.docker.com/v2/repositories/$OWNER/$DOCKER_REPO/tags?page_size=100" | jq -r '.results[].name' | grep -E '^v?[0-9]+\.[0-9]+\.[0-9]+$' | sed 's/^v//' | sort -V | tail -n1); then
+            echo "TAG using curl is: $TAG" >> $LOG_FILE # useful for debugging
             echo "Error: Failed to get releases information."  | tee -a "$LOG_FILE" >&2
-            exit 1
-        fi
-
-        # Use jq to parse the JSON response and extract tag name if curl succeeded.
-        if [ -n "$TAG" ]; then
-            TAG_NAME=$(echo "$TAG" | jq -r '.tag_name' | sed 's/^v//') # Remove leading 'v' if present.
-            echo "Info: curl TAG_NAME: $TAG_NAME" >> $LOG_FILE
-        else
-            echo "Error: Failed to parse release information." | tee -a "$LOG_FILE" >&2
-            exit 1
-        fi
-
-        # Output the tag name or an error message if not found.
-        if [ -z "$TAG_NAME" ]; then
-            echo "Error: No matching image tag found for $OWNER/$REPO." | tee -a "$LOG_FILE" >&2
-            exit 1
-        else
-            #echo "$TAG_NAME" # Uncomment for debugging
-            # If the command was successful, strip any remaining characters that are not part of the version number (e.g., '-alpine').
-            VERSION=$(echo "$TAG_NAME" | sed 's/.*-//; s/-[a-z]*$//')
-            echo "Info: Latest version using curl is: $VERSION" | tee -a "$LOG_FILE"
             echo "" >> $LOG_FILE
+            exit 1
         fi
     }
     check_source "$@"
 
     check_exists() {
+        echo "Latest TAG using curl is: $TAG" >> $LOG_FILE # useful for debugging
         # Attempt to use Docker commands and check if the container exists already.
-        if docker ps -a --filter "name=$CONTAINERNAME" --filter "ancestor=ghcr.io/${OWNER}/${GH_REPO}:${VERSION}" --format '{{.Names}}' | grep -w "$CONTAINERNAME" > /dev/null; then
-            echo "Container '$CONTAINERNAME' with image 'ghcr.io/${OWNER}/${GH_REPO}:${VERSION}' already exists." | tee -a "$LOG_FILE"
+        if docker ps -a --filter "name=$CONTAINERNAME" --filter "ancestor=$OWNER/$DOCKER_REPO:$TAG" --format '{{.Names}}' | grep -w "$6" > /dev/null; then    
+            echo "Container '$CONTAINERNAME' with image '$DOCKER_REPO:$TAG' already exists. Exiting..." | tee -a "$LOG_FILE"           
             echo "" | tee -a "$LOG_FILE"
-            echo "Stopping the container..."
-            if ! docker container stop "$CONTAINERNAME"; then
-                echo "Error: Failed to stop the container." | tee -a "$LOG_FILE" >&2
-                echo "" >> $LOG_FILE                
-                exit 1
-            else
-                echo "Container stopped..."
-            fi
+            exit 0
         else
-            echo "Container '$CONTAINERNAME' with image '${OWNER}/${GH_REPO}:${VERSION}' does not exist."            
-            # Place additional logic here if needed
+            echo "Container '$CONTAINERNAME' with image '$OWNER/$DOCKER_REPO:$TAG' does not exist." | tee -a "$LOG_FILE"
+            echo "" | tee -a "$LOG_FILE"
         fi
     }
     check_exists "$@"
@@ -201,28 +159,28 @@ else
         echo ""
         echo "Pulling image for container: $CONTAINERNAME..."
         echo ""
-        echo "From: ghcr.io/""$OWNER"/"$GH_REPO":"$VERSION" # Useful for debugging
-        if ! docker pull "ghcr.io/${OWNER}/${GH_REPO}:${VERSION}"; then
+        echo "From: $OWNER/$DOCKER_REPO:$TAG" # Useful for debugging
+        if ! docker pull "${3}/${5}:${1}"; then
             echo "Error: Failed to pull Docker image." | tee -a "$LOG_FILE" >&2
             echo "" >> $LOG_FILE
             exit 1
         else
+            echo "Stopping the container..."            
+            docker container stop "$CONTAINERNAME"
             echo "Deleting existing container..."
             docker rm -f "$CONTAINERNAME"
             echo "$CONTAINERNAME removed!"
             echo "Starting up $CONTAINERNAME..."
             docker run -itd \
                 --gpus '"device=GPU-fcc90235-d4c3-65e4-f064-446367f1cb5c"' \
-                --network=macvlan255 \
-                --ip 10.0.255.148 \
-                -p 3000:80 \
-                -v open-webui:/app/backend/data \
+                -p 8000:8000 -p 9443:9443 \
                 --hostname "$CONTAINERNAME" \
                 --name "$CONTAINERNAME" \
-                -e OLLAMA_BASE_URL=http://ollama:11434 \
+                -v /var/run/docker.sock:/var/run/docker.sock \
+                -v portainer_data:/data \
                 -e TZ=America/New_York \
-                --restart always \
-                "ghcr.io/${OWNER}/${GH_REPO}:${VERSION}"
+                --restart=unless-stopped \
+                "$OWNER/$DOCKER_REPO:$TAG"
         fi
     }
     pull_container "$@"
@@ -231,4 +189,4 @@ echo ""
 fi
 
 # Notify the user the script has completed.
-echo "Script has finished!"
+echo "Script has finished!" | tee -a "$LOG_FILE"
