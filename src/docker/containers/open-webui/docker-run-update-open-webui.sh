@@ -83,8 +83,7 @@ if [ $# -gt 0 ]; then # if CLI arguments are provided
         else            
             # If the command was successful, strip any remaining characters that are not part of the version number (e.g., '-alpine').
             VERSION=$(echo "$TAG_NAME" | sed 's/.*-//; s/-[a-z]*$//')
-            echo "Info: Latest version using curl is: $VERSION" | tee -a "$LOG_FILE"
-            echo "" >> $LOG_FILE
+            echo "Info: Latest version using curl is: $VERSION" | tee -a "$LOG_FILE"            
         fi
     }
     check_source "$@"
@@ -97,7 +96,6 @@ if [ $# -gt 0 ]; then # if CLI arguments are provided
             exit 0
         else
             echo "Container '$6' with image '${4}:${1}' does not exist."
-            # Place additional logic here if needed
         fi
     }
     check_exists "$@"

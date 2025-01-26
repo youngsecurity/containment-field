@@ -84,20 +84,18 @@ if [ $# -gt 0 ]; then # if CLI arguments are provided
             # If the command was successful, strip any remaining characters that are not part of the version number (e.g., '-alpine').
             VERSION=$(echo "$TAG_NAME" | sed 's/.*-//; s/-[a-z]*$//')
             echo "Info: Latest version using curl is: $VERSION" | tee -a "$LOG_FILE"
-            echo "" >> $LOG_FILE
         fi
     }
     check_source "$@"
 
     check_exists() {
         # Attempt to use Docker commands and check if the container exists already.
-        if docker ps -a --filter "name=$6" --filter "ancestor=${3}/${4}:${1}" --format '{{.Names}}' | grep -w "$6" > /dev/null; then
+    if docker ps -a --filter "name=$6" --filter "ancestor=${3}/${5}:${VERSION}" --format '{{.Names}}' | grep -w "$6" > /dev/null; then    
             echo "Container '$6' with image '${4}:${1}' already exists. Exiting..." | tee -a "$LOG_FILE"           
             echo "" | tee -a "$LOG_FILE"
             exit 0
         else
-            echo "Container '$6' with image '${4}:${1}' does not exist."
-            # Place additional logic here if needed
+            echo "Container '$6' with image '${5}:${VERSION}' does not exist." | tee -a "$LOG_FILE"            
         fi
     }
     check_exists "$@"
@@ -106,7 +104,7 @@ if [ $# -gt 0 ]; then # if CLI arguments are provided
         echo ""
         echo "Pulling image for container: $6..."
         echo ""
-        echo "ghcr.io/$3"/"$4":"$1" # Useful for debugging
+        echo "Registry: /$3"/"$4":"$1" # Useful for debugging
         if ! docker pull "ghcr.io/${3}/${4}:${1}"; then
             echo "Error: Failed to pull Docker image." | tee -a "$LOG_FILE" >&2
             echo "" >> $LOG_FILE
