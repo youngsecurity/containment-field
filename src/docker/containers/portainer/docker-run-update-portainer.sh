@@ -144,7 +144,7 @@ else
     check_exists() {
         echo "Latest TAG using curl is: $TAG" >> $LOG_FILE # useful for debugging
         # Attempt to use Docker commands and check if the container exists already.
-        if docker ps -a --filter "name=$CONTAINERNAME" --filter "ancestor=$OWNER/$DOCKER_REPO:$TAG" --format '{{.Names}}' | grep -w "$6" > /dev/null; then    
+        if docker ps -a --filter "name=$CONTAINERNAME" --filter "ancestor=$OWNER/$DOCKER_REPO:$TAG" --format '{{.Names}}' | grep -w "$CONTAINERNAME" > /dev/null; then    
             echo "Container '$CONTAINERNAME' with image '$DOCKER_REPO:$TAG' already exists. Exiting..." | tee -a "$LOG_FILE"           
             echo "" | tee -a "$LOG_FILE"
             exit 0
