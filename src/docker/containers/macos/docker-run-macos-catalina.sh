@@ -16,7 +16,7 @@ set -e
 #VAR2="value2"
 
 # Define functions
-function deploy_macos_catalina() {
+deploy_macos_catalina() {
 # 40GB disk space required: 20GB original image 20GB your container.
 docker pull sickcodes/docker-osx:auto
 
