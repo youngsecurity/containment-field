@@ -1,0 +1,49 @@
+services:
+  windows:
+    image: dockurr/windows
+    container_name: windows
+    environment:
+      VERSION: "win11e"
+      DISK_SIZE: "64G"
+      CPU_CORES: "4"
+      RAM_SIZE: "8G"
+      DHCP: "Y" # required for DHCP
+    device_cgroup_rules: # required for DHCP
+      - 'c *:* rwm' # required for DHCP
+    devices:
+      - /dev/kvm
+      - /dev/net/tun
+      - /dev/vhost-net # required for DHCP
+    cap_add:
+      - NET_ADMIN
+    #ports: # defining ports is not required when using a macvlan
+    #  - 8006:8006
+    #  - 3389:3389/tcp
+    #  - 3389:3389/udp
+    stop_grace_period: 2m
+    volumes:
+      - windows:/storage
+      - /home/devusr/:/shared
+    networks:
+      macvlan255:
+        ipv4_address: 10.0.255.154
+    deploy: # required for GPU assignment
+      resources:
+        reservations:
+          devices:
+          - driver: nvidia
+            device_ids: ['0']
+            capabilities: [gpu]  
+
+networks:
+  macvlan255:
+    name: macvlan255
+    external: true
+    ipam:
+     config:
+       - subnet: "10.0.255.0/24"
+         gateway: 10.0.255.1
+
+volumes:
+  windows:
+    external: true

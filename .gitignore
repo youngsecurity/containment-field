@@ -494,3 +494,6 @@ src/docker/containers/traefik/.env
 src/docker/containers/traefik/cf_api_token.txt
 src/docker/containers/traefik/data/.env
 src/docker/containers/traefik/data/letsencrypt/acme.json
+
+# windows-on-docker environment variables
+src/docker/containers/wod/.env
