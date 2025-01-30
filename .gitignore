@@ -497,3 +497,6 @@ src/docker/containers/traefik/data/letsencrypt/acme.json
 
 # windows-on-docker environment variables
 src/docker/containers/wod/.env
+
+# opentofu variables
+src/boilerplate/OpenTofu/credentials.auto.tfvars
