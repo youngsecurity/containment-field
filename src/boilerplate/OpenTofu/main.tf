@@ -21,10 +21,10 @@ variable "aws_secret_key" {}
 #}
 
   # Encrypt the root block device
-  ebs_block_device {
-    device_name = "/dev/sda1"
-    encrypted   = true
-  }
+#  ebs_block_device {
+#    device_name = "/dev/sda1"
+#    encrypted   = true
+#  }
 
 # Define outputs
 output "public_ip" {
