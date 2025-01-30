@@ -1,13 +1,13 @@
 services:
   bind9:
     container_name: ns1
-    image: ubuntu/bind9:9.18-24.04_beta
+    image: ubuntu/bind9:9.20-24.10_edge
     environment:
       - BIND9_USER=root
       - TZ=America/New_York
-    ports:
-      - "53:53/tcp"
-      - "53:53/udp"
+    #ports: # not required when using a MACVLAN
+    #  - "53:53/tcp"
+    #  - "53:53/udp"
     networks:
       macvlan255:
         ipv4_address: 10.0.255.24
@@ -16,6 +16,11 @@ services:
       - ns1_cache:/var/cache/bind
       - ns1_records:/var/lib/bind
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "named-checkconf"]
+      interval: 30s
+      timeout: 10s
+      retries: 3    
 
 networks:
   macvlan255:
