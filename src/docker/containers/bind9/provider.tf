@@ -16,7 +16,7 @@ variable "tsig_key" {
 # Configure the DNS Provider
 provider "dns" {
   update {
-    server        = "10.0.255.42"
+    server        = "10.0.255.24"
     key_name      = "tsig-key."
     key_algorithm = "hmac-sha256"
     key_secret    = var.tsig_key
