@@ -500,3 +500,4 @@ src/docker/containers/wod/.env
 
 # opentofu variables
 src/boilerplate/OpenTofu/credentials.auto.tfvars
+src/docker/containers/bind9/credentials.auto.tfvars

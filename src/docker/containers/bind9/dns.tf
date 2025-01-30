@@ -4,4 +4,5 @@ resource "dns_a_record_set" "macos" {
     addresses = [
         "10.0.255.156"
     ]
+    ttl = 300
 }
