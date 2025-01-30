@@ -22,8 +22,3 @@ provider "dns" {
     key_secret    = var.tsig_key
   }
 }
-
-# Create a DNS A record set
-resource "dns_a_record_set" "www" {
-  # ...
-}
