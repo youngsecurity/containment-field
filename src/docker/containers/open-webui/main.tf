@@ -23,6 +23,10 @@ resource "docker_image" "open-webui" {
 # Reference the existing external volume
 resource "docker_volume" "open-webui" {
   name = "open-webui"
+  
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 # Reference the existing external network
