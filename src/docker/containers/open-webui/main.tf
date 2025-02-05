@@ -21,8 +21,8 @@ resource "docker_image" "open-webui" {
 }
 
 # Reference the existing external volume
-resource "docker_volume" "ollama" {
-  name = "ollama"
+resource "docker_volume" "open-webui" {
+  name = "open-webui"
 }
 
 # Reference the existing external network
@@ -58,7 +58,7 @@ resource "docker_container" "open-webui" {
   # Set environment variables
   env = [
     "TZ=America/New_York",
-    "OLLAMA_ORIGINS=moz-extension://*,chrome-extension://*,safari-web-extension://*",
+    "OLLAMA_BASE_URL=http://ollama:11434",
   ]
 
   # Add devices
@@ -93,8 +93,8 @@ resource "docker_container" "open-webui" {
 
   # Mount the external volume
   mounts {
-    target = "/root/.ollama"
-    source = resource.docker_volume.ollama.name
+    target = "/app/backend/data"
+    source = resource.docker_volume.open-webui.name
     type   = "volume"
   }
 
