@@ -124,7 +124,6 @@ if [ $# -gt 0 ]; then # if CLI arguments are provided
                 --gpus '"device=GPU-fcc90235-d4c3-65e4-f064-446367f1cb5c"' \
                 --network=macvlan255 \
                 --ip 10.0.255.147 \
-                -p 11434:11434 \
                 -v ollama:/root/.ollama \
                 --hostname ollama \
                 --name "$6" \
@@ -213,12 +212,11 @@ else
                 --gpus '"device=GPU-fcc90235-d4c3-65e4-f064-446367f1cb5c"' \
                 --network=macvlan255 \
                 --ip 10.0.255.147 \
-                -p 11434:11434 \
                 -v ollama:/root/.ollama \
                 --hostname $CONTAINERNAME \
                 --name $CONTAINERNAME \
-                --restart always \
                 -e TZ=America/New_York \
+                --restart always \
                 "${OWNER}/${GH_REPO}:${VERSION}"
         fi
     }

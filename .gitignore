@@ -498,6 +498,23 @@ src/docker/containers/traefik/data/letsencrypt/acme.json
 # windows-on-docker environment variables
 src/docker/containers/wod/.env
 
-# opentofu variables
-src/boilerplate/OpenTofu/credentials.auto.tfvars
-src/docker/containers/bind9/credentials.auto.tfvars
+# opentofu and terraform
+*.auto.tfvars
+*.tfvars
+*.tfvars.json
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*.pem
+*.key
+*.pub
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraform.tfstate.lock.info
+.terraformrc
+terraform.rc
+.envrc

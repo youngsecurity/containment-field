@@ -122,7 +122,6 @@ if [ $# -gt 0 ]; then # if CLI arguments are provided
                 --gpus '"device=GPU-fcc90235-d4c3-65e4-f064-446367f1cb5c"' \
                 --network=macvlan255 \
                 --ip 10.0.255.148 \
-                -p 3000:80 \
                 -v "${6}":/app/backend/data \
                 --hostname "${6}" \
                 --name "$6" \
@@ -215,7 +214,6 @@ else
                 --gpus '"device=GPU-fcc90235-d4c3-65e4-f064-446367f1cb5c"' \
                 --network=macvlan255 \
                 --ip 10.0.255.148 \
-                -p 3000:80 \
                 -v open-webui:/app/backend/data \
                 --hostname "$CONTAINERNAME" \
                 --name "$CONTAINERNAME" \
