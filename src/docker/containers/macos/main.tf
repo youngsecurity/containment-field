@@ -14,13 +14,17 @@ provider "docker" {
 }
 
 # Pull the Docker image
-resource "docker_image" "macos_image" {
-  name = "dockurr/macos:latest"
+resource "docker_image" "docker-osx-ventura" {
+  name = "docker-osx-ventura:latest"
+}
+
+data "docker_image" "latest" {
+  name = "docker-osx-ventura"
 }
 
 # Reference the existing external volume
-resource "docker_volume" "dockurr_macos_disk_1" {
-  name = "dockurr_macos_disk_1"
+resource "docker_volume" "macos_sickcodes_disk_1" {
+  name = "macos_sickcodes_disk_1"
 }
 
 # Reference the existing external network
@@ -33,10 +37,14 @@ resource "docker_network" "macvlan255" {
   }
 }
 
+data "docker_network" "macvlan255" {
+  name = "macvlan255"  
+}
+
 # Create the Docker container
-resource "docker_container" "macos_dockurr" {  
-  image = docker_image.macos_image.image_id
-  name  = "macos_dockurr"
+resource "docker_container" "macos_sickcodes" {  
+  image = docker_image.docker-osx-ventura.image_id
+  name  = "macos_sickcodes"
 
   # Add capabilities
   capabilities {
@@ -45,10 +53,15 @@ resource "docker_container" "macos_dockurr" {
 
   # Set environment variables
   env = [
-    "VERSION=14",
-    "DISK_SIZE=64G",
-    "CPU_CORES=4",
-    "RAM_SIZE=8GB",
+    "DISPLAY=$${DISPLAY:-:0.0}",    
+    "GENERATE_UNIQUE=true",
+    #"CPU='Haswell-noTSX'",
+    #"CPUID_FLAGS='kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on'",
+    #"MASTER_PLIST_URL='https://raw.githubusercontent.com/sickcodes/osx-serial-generator/master/config-custom-sonoma.plist'",
+    "SIZE=64G",
+    "CORES=4",
+    "SMP=4",
+    "RAM=8",
   ]
 
   # Add devices
@@ -62,12 +75,12 @@ resource "docker_container" "macos_dockurr" {
   }
 
   # Healthcheck
-  healthcheck {
-    test = ["CMD", "curl", "-f", "http://10.0.255.156:8006"]
-    interval = "30s"
-    timeout = "10s"
-    retries = "3"
-  }
+  #healthcheck {
+  #  test = ["CMD", "curl", "-f", "http://10.0.255.156:8006"]
+  #  interval = "30s"
+  #  timeout = "10s"
+  #  retries = "3"
+  #}
 
   # Map ports # not reqired when using a MACVLAN
   #ports {
@@ -88,13 +101,20 @@ resource "docker_container" "macos_dockurr" {
   # Mount the external volume
   mounts {
     target = "/storage"
-    source = resource.docker_volume.dockurr_macos_disk_1.name
+    source = resource.docker_volume.macos_sickcodes_disk_1.name
     type   = "volume"
+  }
+
+  # Mount /tmp/.X11-unix from the host to the container
+  mounts {
+    target = "/tmp/.X11-unix"
+    source = "/tmp/.X11-unix"
+    type   = "bind"
   }
 
   # Connect to the external network with a static IP
   networks_advanced {
-    name         = resource.docker_network.macvlan255.name
+    name         = data.docker_network.macvlan255.name
     ipv4_address = "10.0.255.156"
   }
 
