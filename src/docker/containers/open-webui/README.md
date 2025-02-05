@@ -1,4 +1,4 @@
-# [youngsecurity/ai-ollama-webui](https://github.com/youngsecurity/ai-ollama-webui)
+# [youngsecurity/ai-open-webui](https://github.com/youngsecurity/ai-open-webui)
 
 ## Default Examples
 
