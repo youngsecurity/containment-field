@@ -29,7 +29,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# General
+# macOS
 .DS_Store
 .AppleDouble
 .LSOverride
@@ -484,7 +484,7 @@ FodyWeavers.xsd
 *.sln.iml
 
 # Kasm Workspaces
-#src/hosts/kasm/kasm_release/
+src/docker/containers/kasm/kasm_release/
 
 # bind9 Zones
 src/docker/containers/bind9/ns1*
