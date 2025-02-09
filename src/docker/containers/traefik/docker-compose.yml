@@ -1,7 +1,7 @@
 services:
   tfk-01:
     #image: cgr.dev/chainguard/traefik:latest
-    image: traefik:v3.3
+    image: traefik:v3.3.3
     container_name: tfk-01
     command:
       #- "--log.level=DEBUG"
