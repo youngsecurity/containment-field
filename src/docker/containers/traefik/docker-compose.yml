@@ -33,11 +33,11 @@ services:
       - cf_api_token
     env_file: .env # use .env
     volumes:
-      #- /etc/localtime:/etc/localtime:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/localtime:/etc/localtime:ro
+      #- /var/run/docker.sock:/var/run/docker.sock:ro
       - ./data/traefik.yml:/etc/traefik/traefik.yml:ro
       - ./data/letsencrypt:/letsencrypt
-      # - ./data/config.yml:/config.yml:ro    
+      - ./data/config.yml:/config.yml:ro    
     labels:
       - "traefik.enable=true"
       #- "traefik.http.routers.traefik.entrypoints=web"
