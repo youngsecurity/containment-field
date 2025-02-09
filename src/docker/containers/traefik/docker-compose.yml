@@ -1,8 +1,8 @@
 services:
-  traefik:
+  tfk-01:
     #image: cgr.dev/chainguard/traefik:latest
-    image: traefik:v3.2
-    container_name: traefik
+    image: traefik:v3.3
+    container_name: tfk-01
     command:
       #- "--log.level=DEBUG"
       #- "--api.insecure=true"

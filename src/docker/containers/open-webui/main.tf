@@ -47,16 +47,8 @@ data "docker_network" "macvlan255" {
 resource "docker_container" "open-webui" {  
   image = docker_image.open-webui.image_id
   name  = "open-webui"
-
-  # Add capabilities
-  #capabilities {
-  #  add = ["NET_ADMIN"]
-  #}
-
-  hostname = "open-webui"
-  
+  hostname = "open-webui"  
   gpus = "device=GPU-fcc90235-d4c3-65e4-f064-446367f1cb5c"
-
   tty = true
 
   # Set environment variables
@@ -65,49 +57,12 @@ resource "docker_container" "open-webui" {
     "OLLAMA_BASE_URL=http://ollama:11434",
   ]
 
-  # Add devices
-  #devices {
-  #  host_path      = ""
-  #  container_path = ""
-  #}
-  #devices {
-  #  host_path      = ""
-  #  container_path = ""
-  #}
-
-  # Healthcheck
-  #healthcheck {
-  #  test = ["CMD", "curl", "-f", "http://IP:PORT"]
-  #  interval = "30s"
-  #  timeout = "10s"
-  #  retries = "3"
-  #}
-
-  # Map ports # not reqired when using a MACVLAN 
-  #ports {
-  #  internal = XXXX
-  #  external = XXXX
-  #  protocol = "tcp"
-  #}
-  #ports {
-  #  internal = XXXX
-  #  external = XXXX
-  #  protocol = "udp"
-  #}
-
   # Mount the external volume
   mounts {
     target = "/app/backend/data"
     source = resource.docker_volume.open-webui.name
     type   = "volume"
   }
-
-  # Mount /tmp/.X11-unix from the host to the container
-  #mounts {
-  #  target = "/tmp/.X11-unix"
-  #  source = "/tmp/.X11-unix"
-  #  type   = "bind"
-  #}
 
   # Connect to the external network with a static IP
   networks_advanced {
@@ -117,7 +72,4 @@ resource "docker_container" "open-webui" {
 
   # Set the restart policy
   restart = "unless-stopped"
-
-  # Set the stop timeout (in seconds)
-  #stop_timeout = 120
 }

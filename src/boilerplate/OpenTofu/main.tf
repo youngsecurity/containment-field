@@ -20,12 +20,58 @@ variable "aws_secret_key" {}
 #  instance_type = "t2.micro"
 #}
 
+  # Add devices
+  #devices {
+  #  host_path      = ""
+  #  container_path = ""
+  #}
+  #devices {
+  #  host_path      = ""
+  #  container_path = ""
+  #}
+
+  # Healthcheck
+  #healthcheck {
+  #  test = ["CMD", "curl", "-f", "http://IP:PORT"]
+  #  interval = "30s"
+  #  timeout = "10s"
+  #  retries = "3"
+  #}
+
+  # Map ports # not reqired when using a MACVLAN 
+  #ports {
+  #  internal = XXXX
+  #  external = XXXX
+  #  protocol = "tcp"
+  #}
+  #ports {
+  #  internal = XXXX
+  #  external = XXXX
+  #  protocol = "udp"
+  #}
+
+  # Mount the external volumes
+  # Mount /tmp/.X11-unix from the host to the container
+  #mounts {
+  #  target = "/tmp/.X11-unix"
+  #  source = "/tmp/.X11-unix"
+  #  type   = "bind"
+  #}
+
   # Encrypt the root block device
 #  ebs_block_device {
 #    device_name = "/dev/sda1"
 #    encrypted   = true
 #  }
 
+  # Set the stop timeout (in seconds)
+  #stop_timeout = 120
+
+  # Add capabilities
+  #capabilities {
+  #  add = ["NET_ADMIN"]
+  #}
+    
 # Define outputs
 output "public_ip" {
   value = aws_instance.example.public_ip
