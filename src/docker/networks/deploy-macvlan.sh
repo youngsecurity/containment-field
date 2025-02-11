@@ -28,6 +28,7 @@ function deploy_Macvlan() {
         --gateway=$gatewayIP \
         --ip-range=$ipRange \
         --aux-address="reserved1=10.0.255.144" \
+        --aux-address="reserved1=10.0.255.159" \
         -o parent="$infName" $netName
 }
 
