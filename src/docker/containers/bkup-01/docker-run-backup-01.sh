@@ -14,7 +14,7 @@ deploy_container() {
         -v pihole_etc:/data \
         -v "$(pwd)":/backup \
         $image \
-        sh -c "sudo tar czvf /backup/pihole_etc_backup.tar.gz -C /data ."    
+        sh -c "tar czvf /backup/pihole_etc_backup.tar.gz -C /data ."
 }
 
 # Call a function
