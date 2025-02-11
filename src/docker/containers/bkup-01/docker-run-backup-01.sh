@@ -8,7 +8,7 @@ image="alpine"
 
 # Define functions
 deploy_container() {
-    docker run --rm \
+    docker run --itd \
         --name $name \
         -e $timezone \
         -v pihole_etc:/data \
