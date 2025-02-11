@@ -8,6 +8,6 @@ Running BIND9 as root (BIND9_USER=root) could pose a security risk, depending on
 
 Ensure proper backup mechanisms are in place for the critical DNS configuration and zone files (located in /etc/bind, /var/cache/bind, and /var/lib/bind).
 
-## Volume Creation 
+## Volume Creation
 
 Before running docker-compose up, ensure that the external volumes (ns1_config, ns1_cache, and ns1_records) and the macvlan255 network have been pre-created, as Docker will not create them automatically.
