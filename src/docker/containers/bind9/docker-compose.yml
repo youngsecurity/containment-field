@@ -27,9 +27,9 @@ networks:
     name: macvlan255
     external: true
     ipam:
-     config:
-       - subnet: "10.0.255.0/24"
-         gateway: 10.0.255.1
+      config:
+        - subnet: "10.0.255.0/24"
+          gateway: 10.0.255.1
 
 volumes:
   ns1_config:
