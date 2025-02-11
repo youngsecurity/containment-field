@@ -19,7 +19,7 @@ services:
       - pihole_etc:/etc/pihole
       - pihole_etc_dnsmasq.d:/etc/dnsmasq.d
     dns:
-      - 10.0.255.24 # Primary DNS server for this container
+      - 127.0.0.1 # Primary DNS server for this container
       - 10.0.255.1 # Specify the upstream DNS server as the secondary DNS server for Pi-Hole
     restart: always
 
