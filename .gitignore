@@ -515,3 +515,8 @@ override.tf.json
 terraform.rc
 .envrc
 .env
+
+# archives
+.tar.gz
+.zip
+.rar
