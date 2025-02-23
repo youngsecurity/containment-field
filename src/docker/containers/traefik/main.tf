@@ -15,73 +15,21 @@ provider "docker" {
 }
 
 # Pull the Docker image
-resource "docker_image" "traefik:v3.3" {
+resource "docker_image" "traefik:v3.3.3" {
   name = "treafik:v3.3.3"
 }
 
 # Reference the existing external volume(s)
-resource "docker_volume" "open-webui" {
-  name = "open-webui"
+resource "docker_volume" "tfk-01" {
+  name = "tfk-01"
   
   lifecycle {
     prevent_destroy = true
   }
 }
 
-resource "docker_volume" "open-webui" {
-  name = "open-webui"
-  
-  lifecycle {
-    prevent_destroy = true
-  }
-}
-
-# Reference the existing external network
-resource "docker_network" "macvlan255" {
-  name = "macvlan255"
-  driver = "macvlan"
-
-  lifecycle {
-    prevent_destroy = true
-  }
-}
-
-data "docker_network" "macvlan255" {
-  name = "macvlan255"  
-}
-
-# Create the Docker container
-resource "docker_container" "open-webui" {  
-  image = docker_image.open-webui.image_id
-  name  = "open-webui"
-  hostname = "open-webui"  
-  gpus = "device=GPU-fcc90235-d4c3-65e4-f064-446367f1cb5c"
-  tty = true
-
-  # Set environment variables
-  env = [
-    "TZ=America/New_York",
-    "OLLAMA_BASE_URL=http://ollama:11434",
-  ]
-
-  # Mount the external volume
-  mounts {
-    target = "/app/backend/data"
-    source = resource.docker_volume.open-webui.name
-    type   = "volume"
-  }
-
-  # Connect to the external network with a static IP
-  networks_advanced {
-    name         = data.docker_network.macvlan255.name
-    ipv4_address = "10.0.255.148"
-  }
-
-  # Set the restart policy
-  restart = "unless-stopped"
-}# Reference the existing external volume
-resource "docker_volume" "open-webui" {
-  name = "open-webui"
+resource "docker_volume" "tfk-01" {
+  name = "tfk-01"
   
   lifecycle {
     prevent_destroy = true
@@ -103,23 +51,21 @@ data "docker_network" "macvlan255" {
 }
 
 # Create the Docker container
-resource "docker_container" "open-webui" {  
-  image = docker_image.open-webui.image_id
-  name  = "open-webui"
-  hostname = "open-webui"  
-  gpus = "device=GPU-fcc90235-d4c3-65e4-f064-446367f1cb5c"
+resource "docker_container" "tfk-01" {  
+  image = docker_image.tfk-01.image_id
+  name  = "tfk-01"
+  hostname = "tfk-01"
   tty = true
 
   # Set environment variables
   env = [
     "TZ=America/New_York",
-    "OLLAMA_BASE_URL=http://ollama:11434",
   ]
 
   # Mount the external volume
   mounts {
     target = "/app/backend/data"
-    source = resource.docker_volume.open-webui.name
+    source = resource.docker_volume.tfk-01.name
     type   = "volume"
   }
 
@@ -129,6 +75,4 @@ resource "docker_container" "open-webui" {
     ipv4_address = "10.0.255.148"
   }
 
-  # Set the restart policy
-  restart = "unless-stopped"
 }
