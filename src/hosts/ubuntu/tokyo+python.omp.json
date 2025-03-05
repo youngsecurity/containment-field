@@ -62,24 +62,6 @@
           "type": "git"
         },
         {
-          "style": "plain",
-          "template": "[{{ .Profile }}{{if .Region}}@{{ .Region }}{{ end }}]",
-          "foreground": "#ffa5d8",
-          "type": "aws"
-        },
-        {
-          "style": "plain",
-          "template": "[{{.Context}}{{if .Namespace}} :: {{.Namespace}}{{end}}]",
-          "foreground": "#ffa5d8",
-          "type": "kubectl"
-        },
-        {
-          "style": "plain",
-          "template": "[\uf0e7]",
-          "foreground": "#ffa5d8",
-          "type": "root"
-        },
-        {
           "style": "powerline",
           "template": "[<#ffffff>\uea6c</> Error, check your command]",
           "foreground": "#ffa5d8",
