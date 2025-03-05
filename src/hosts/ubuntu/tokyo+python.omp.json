@@ -65,7 +65,7 @@
           "type": "docker",
           "style": "plain",          
           "foreground": "#7eb8da",          
-          "template": "  {{ .Context }} "
+          "template": "[ {{ .Context }}]"
         },
         {
           "style": "plain",
