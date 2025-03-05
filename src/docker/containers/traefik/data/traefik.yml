@@ -17,8 +17,9 @@ entryPoints:
 certificatesResolvers:
   myresolver:
     acme:
-      email: "joe+traefik@youngsecurity.net"
-      storage: /letsencrypt/acme.json
+      email: "${EMAIL}"
+      storage: "${STORAGE}"
+      #caServer: https://acme-v02.api.letsencrypt.org/directory # prod (default)
       caServer: https://acme-staging-v02.api.letsencrypt.org/directory # staging  
       httpChallenge:
         # used during the challenge
