@@ -62,6 +62,12 @@
           "type": "git"
         },
         {
+          "type": "docker",
+          "style": "plain",          
+          "foreground": "#7eb8da",          
+          "template": "  {{ .Context }} "
+        },
+        {
           "style": "plain",
           "template": "[{{ .Profile }}{{if .Region}}@{{ .Region }}{{ end }}]",
           "foreground": "#ffa5d8",
