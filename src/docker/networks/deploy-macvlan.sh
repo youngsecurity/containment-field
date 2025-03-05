@@ -11,6 +11,7 @@ set -e
 
 # Define variables
 infName="eth0"
+ipv4="10.0.255.60/32"
 subnet="10.0.255.0/24"
 ipRange="10.0.255.144/28"
 gatewayIP="10.0.255.1"
@@ -33,9 +34,9 @@ function deploy_Macvlan() {
         -o parent="$infName" $netName
 }
 
-function deploy_bridge() {
+function deploy_Bridge() {
     sudo ip link add "$netName" link "$infName" type "$netType" mode bridge
-    sudo ip addr add 10.0.255.60/32 dev "$netName"
+    sudo ip addr add "$ipv4" dev "$netName"
     sudo ip link set "$netName" up
     sudo ip route add "$ipRange" dev "$netName" # Add route to the macvlan network for docker dhcp
     sudo ip route add "$localDNS" dev "$netName" # Add route to the macvlan network for local dns
