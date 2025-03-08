@@ -1,7 +1,7 @@
 services:
   tfk-01:
     #image: cgr.dev/chainguard/traefik:latest
-    image: traefik:v3.3.3
+    image: traefik:v3.3.4
     container_name: tfk-01
     command:
       #- "--log.level=DEBUG"
@@ -14,11 +14,11 @@ services:
       #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
       #- "--certificatesresolvers.myresolver.acme.email=${EMAIL}"
       #- "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"      
-    #ports: # not required when using a MACVLAN
-    #  - "80:80"       # For HTTP (usually serves HTTP/1.1 traffic) 
-    #  - "8080:8080"   # Web UI
-    #  - "443:443/tcp" # For HTTPS (HTTP/2 or fallback to HTTP/1.1 via TLS over TCP)
-    #  - "443:443/udp" # For HTTP/3 (which runs over QUIC using UDP)
+    ports: # not required when using a MACVLAN
+      - "80:80"       # For HTTP (usually serves HTTP/1.1 traffic) 
+      - "8080:8080"   # Web UI
+      - "443:443/tcp" # For HTTPS (HTTP/2 or fallback to HTTP/1.1 via TLS over TCP)
+      - "443:443/udp" # For HTTP/3 (which runs over QUIC using UDP)
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
@@ -35,37 +35,44 @@ services:
       - .env # use .env
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /etc/localtime:/etc/localtime:ro
-      - ./data/letsencrypt:/letsencrypt
+      - /etc/localtime:/etc/localtime:ro      
+      - ./data/acme.json:/acme.json
       - ./data/traefik.yml:/etc/traefik/traefik.yml:ro      
-      - ./data/config.yml:/config.yml:ro
+      #- ./data/config.yml:/config.yml:ro
     labels:
       - "traefik.enable=true"
-      #- "traefik.http.routers.traefik.entrypoints=web"
+      - "traefik.http.routers.traefik.entrypoints=http"
       - "traefik.http.routers.traefik.rule=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_RULE}"
       - "traefik.http.middlewares.traefik-auth.basicauth.users=${TRAEFIK_DASHBOARD_CREDENTIALS}"
       - "traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme=https"
       - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https"
       - "traefik.http.routers.traefik.middlewares=traefik-https-redirect"
-      - "traefik.http.routers.traefik-secure.entrypoints=websecure"
+      - "traefik.http.routers.traefik-secure.entrypoints=https"
       - "traefik.http.routers.traefik-secure.rule=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_SECURE_RULE}"
       - "traefik.http.routers.traefik-secure.middlewares=traefik-auth"
       - "traefik.http.routers.traefik-secure.tls=true"
-      - "traefik.http.routers.traefik-secure.tls.certresolver=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_SECURE_TLS_CERTRESOLVER}"
-      #- "traefik.tls.stores.default.defaultgeneratedcert.resolver=myresolver"
+      - "traefik.http.routers.traefik-secure.tls.certresolver=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_SECURE_TLS_CERTRESOLVER}"      
       - "traefik.http.routers.traefik-secure.tls.domains[0].main=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_SECURE_TLS_DOMAINS_0_MAIN}"
       - "traefik.http.routers.traefik-secure.tls.domains[0].sans=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_SECURE_TLS_DOMAINS_0_SANS}"
       - "traefik.http.routers.traefik-secure.service=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_SECURE_SERVICE}"
 
+  whoami:
+    # A container that exposes an API to show its IP address
+    image: traefik/whoami
+    networks:
+      macvlan255:        
+    labels:
+      - "traefik.http.routers.whoami.rule=Host(`whoami.home.youngsecurity.net`)"
+
 secrets:
   cf_api_token:
-    file: ./cf_api_token.txt
+    file: ${CF_DNS_API_TOKEN_PATH}
 
 networks:
   macvlan255:
     name: macvlan255
     external: true
-    ipam:
-     config:
-       - subnet: "10.0.255.0/24"
-         gateway: 10.0.255.1
+
+#volumes:
+#  tfk-01:
+#    external: true

@@ -8,15 +8,15 @@ terraform {
 }
 provider "docker" {
   # Configuration options  
-  host = "tcp://ignignokt.home.youngsecurity.net:2376/"  
-  ca_material   = file(pathexpand("~/.docker/ca-docker.pem")) # this can be omitted
-  cert_material = file(pathexpand("~/.docker/client-docker-cert.pem"))
-  key_material  = file(pathexpand("~/.docker/key-docker-client.pem"))  
+  host = "${DOCKER_HOST}"
+  ca_material   = "${CA_MATERIAL}"
+  cert_material = "${CERT_MATERIAL}"
+  key_material  = "${KEY_MATERIAL}"
 }
 
 # Pull the Docker image
-resource "docker_image" "traefik:v3.3.3" {
-  name = "treafik:v3.3.3"
+resource "docker_image" "traefik:v3.3.4" {
+  name = "treafik:v3.3.4"
 }
 
 # Reference the existing external volume(s)
@@ -72,7 +72,7 @@ resource "docker_container" "tfk-01" {
   # Connect to the external network with a static IP
   networks_advanced {
     name         = data.docker_network.macvlan255.name
-    ipv4_address = "10.0.255.148"
+    ipv4_address = "10.0.255.8"
   }
 
 }

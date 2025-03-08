@@ -491,7 +491,7 @@ src/docker/containers/bind9/ns1*
 
 # traefik environment variable file
 src/docker/containers/traefik/cf_api_token.txt
-src/docker/containers/traefik/data/letsencrypt/acme.json
+acme.json
 
 # opentofu and terraform
 *.auto.tfvars
