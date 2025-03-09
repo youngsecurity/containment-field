@@ -4,16 +4,6 @@ services:
     image: traefik:v3.3.4
     container_name: tfk-01
     command:
-      #- "--log.level=DEBUG"
-      #- "--api.insecure=true"
-      #- "--providers.docker=true"
-      #- "--providers.docker.exposedbydefault=false"
-      #- "--entryPoints.web.address=:80"
-      #- "--entryPoints.websecure.address=:443"
-      #- "--certificatesresolvers.myresolver.acme.tlschallenge=true"
-      #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
-      #- "--certificatesresolvers.myresolver.acme.email=${EMAIL}"
-      #- "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
     ports: # not required when using a MACVLAN
       - "80:80"       # For HTTP (usually serves HTTP/1.1 traffic)
       - "8080:8080"   # Web UI
@@ -27,47 +17,77 @@ services:
         ipv4_address: 10.0.255.8
     environment:
       #CF_DNS_API_TOKEN_FILE: /run/secrets/cf_api_token # note using _FILE for docker secrets
-      CF_DNS_API_TOKEN: ${CF_DNS_API_TOKEN} # if using .env
-      TRAEFIK_DASHBOARD_CREDENTIALS: ${TRAEFIK_DASHBOARD_CREDENTIALS}
-    secrets:
-      - cf_api_token
+      - CF_DNS_API_TOKEN=${CF_DNS_API_TOKEN} # if using .env
+      - TRAEFIK_DASHBOARD_CREDENTIALS=${TRAEFIK_DASHBOARD_CREDENTIALS}
     env_file:
       - .env # use .env
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /etc/localtime:/etc/localtime:ro
+      - ./data/traefik.yml:/traefik.yml:ro
+      - ./data/config.yml:/config.yml:ro
       - ./ssl-certs:/ssl-certs
       - ./data/acme.json:/acme.json
-      - ./data/traefik.yml:/etc/traefik/traefik.yml:ro
-      #- ./data/config.yml:/config.yml:ro
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.traefik.entrypoints=http"
-      - "traefik.http.routers.traefik.rule=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_RULE}"
-      - "traefik.http.middlewares.traefik-auth.basicauth.users=${TRAEFIK_DASHBOARD_CREDENTIALS}"
-      - "traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.tfk-01.rule=Host(`tfk-01.home.youngsecurity.net`)"
+      - "traefik.http.routers.tfk-01.tls=true"
+      - "traefik.http.routers.tfk-01-secure.tls.certresolver=cloudflare"
+      - "traefik.http.routers.tfk-01-secure.tls.domains[0].main=home.youngsecurity.net"
+      - "traefik.http.routers.tfk-01-secure.tls.domains[0].sans=*.home.youngsecurity.net"      
+      - "traefik.http.routers.tfk-01-secure.entrypoints=https"
+      - "traefik.http.routers.tfk-01-secure.rule=Host(`tfk-01.home.youngsecurity.net`)"
+      - "traefik.http.routers.tfk-01-secure.tls=true"
+      - "traefik.http.routers.tfk-01-secure.service=api@internal"
+      - "traefik.http.routers.tfk-01.middlewares=tfk-01-https-redirect"
+      - "traefik.http.routers.tfk-01.middlewares=tfk-01-auth"
+      - "traefik.http.middlewares.tfk-01-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.tfk-01-auth.basicauth.users=${TRAEFIK_DASHBOARD_CREDENTIALS}"
       - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https"
-      - "traefik.http.routers.traefik.middlewares=traefik-https-redirect"
-      - "traefik.http.routers.traefik-secure.entrypoints=https"
-      - "traefik.http.routers.traefik-secure.rule=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_SECURE_RULE}"
-      - "traefik.http.routers.traefik-secure.middlewares=traefik-auth"
-      - "traefik.http.routers.traefik-secure.tls=true"
-      - "traefik.http.routers.traefik-secure.tls.certresolver=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_SECURE_TLS_CERTRESOLVER}"
-      - "traefik.http.routers.traefik-secure.tls.domains[0].main=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_SECURE_TLS_DOMAINS_0_MAIN}"
-      - "traefik.http.routers.traefik-secure.tls.domains[0].sans=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_SECURE_TLS_DOMAINS_0_SANS}"
-      - "traefik.http.routers.traefik-secure.service=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_SECURE_SERVICE}"
+      - "traefik.http.services.tfk-01.loadbalancer.server.port=8080"
 
   whoami:
     # A container that exposes an API to show its IP address
     image: traefik/whoami
     networks:
       macvlan255:
+        #ipv4_address: 10.0.255.156
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.whoami.rule=Host(`whoami.home.youngsecurity.net`)"
+      - "traefik.http.routers.whoami.tls=true"
+      - "traefik.http.routers.whoami.tls.certresolver=cloudflare"
+      - "traefik.http.routers.whoami-secure.tls.domains[0].main=home.youngsecurity.net"
+      - "traefik.http.routers.whoami-secure.tls.domains[0].sans=*.home.youngsecurity.net"
+      - "traefik.http.routers.whoami-secure.entrypoints=https"
+      - "traefik.http.routers.whoami-secure.rule=Host(`whoami.home.youngsecurity.net`)"
+      - "traefik.http.routers.whoami-secure.tls=true"
+      - "traefik.http.routers.whoami-secure.service=whoami"
+      - "traefik.http.routers.whoami.middlewares=whoami-https-redirect"
+      - "traefik.http.middlewares.whoami-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https"      
+      - "traefik.http.services.whoami.loadbalancer.server.port=80"
 
-secrets:
-  cf_api_token:
-    file: ${CF_DNS_API_TOKEN_PATH}
+  nginx:
+    image: nginxdemos/nginx-hello
+    networks:
+      macvlan255:
+        ipv4_address: 10.0.255.146
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nginx.rule=Host(`nginx.home.youngsecurity.net`)"
+      - "traefik.http.routers.nginx.tls=true"
+      - "traefik.http.routers.nginx-secure.entrypoints=https"
+      - "traefik.http.routers.nginx-secure.rule=Host(`nginx.home.youngsecurity.net`)"
+      - "traefik.http.routers.nginx-secure.tls=true"
+      - "traefik.http.routers.nginx-secure.tls.certresolver=cloudflare"
+      - "traefik.http.routers.nginx-secure.tls.domains[0].main=home.youngsecurity.net"
+      - "traefik.http.routers.nginx-secure.tls.domains[0].sans=*.home.youngsecurity.net"
+      - "traefik.http.routers.nginx-secure.service=nginx"
+      - "traefik.http.routers.nginx.middlewares=nginx-https-redirect"
+      - "traefik.http.middlewares.nginx-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https"      
+      - "traefik.http.services.nginx.loadbalancer.server.port=8080"      
 
 networks:
   macvlan255:
@@ -75,5 +95,7 @@ networks:
     external: true
 
 #volumes:
-#  tfk-01:
+#  tfk-01_config:
+#    external: true
+#  tfk-ssl-certs:
 #    external: true

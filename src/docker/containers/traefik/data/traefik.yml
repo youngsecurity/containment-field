@@ -25,14 +25,14 @@ providers:
     #  ca: /home/devusr/.docker/ca-docker.pem
     #  cert: /home/devusr/.docker/client-docker-cert.pem # path to public cert used for secure connection to docker daemon
     #  key: /home/devusr/.docker/key-docker-client.pem
-  # file:
-  #   filename: /config.yml
+  file:
+    filename: /config.yml
 
 certificatesResolvers:
   cloudflare:
     acme:
-      email: redlinejoes.net@gmail.com
-      storage: acme.json
+      email: "redlinejoes.net@gmail.com"
+      storage: "acme.json"
       #caServer: https://acme-v02.api.letsencrypt.org/directory # prod (default)
       caServer: https://acme-staging-v02.api.letsencrypt.org/directory # staging  
       dnsChallenge:
@@ -40,6 +40,12 @@ certificatesResolvers:
         provider: cloudflare
         resolvers:
           - "1.1.1.1:53"
-          - "1.0.0.1:53"
+          - "8.8.8.8:53"
         #disablePropagationCheck: true
-        #delayBeforeCheck: 60s # uncomment along with disablePropagationCheck if needed to ensure the TXT record is ready before verification is attempted
+        delayBeforeCheck: 2s # uncomment along with disablePropagationCheck if needed to ensure the TXT record is ready before verification is attempted
+
+log:
+  level: "DEBUG"
+  filePath: "/var/log/traefik/traefik.log"
+accessLog:
+  filePath: "/var/log/traefik/access.log"
