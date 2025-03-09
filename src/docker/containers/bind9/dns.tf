@@ -4,5 +4,5 @@ resource "dns_a_record_set" "tfk-01" {
     addresses = [
         "10.0.255.8"
     ]
-    ttl = 300
+    ttl = 30
 }
