@@ -520,3 +520,4 @@ terraform.rc
 .tar.gz
 .zip
 .rar
+.bak

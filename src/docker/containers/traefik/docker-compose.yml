@@ -36,6 +36,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /etc/localtime:/etc/localtime:ro
+      - ./ssl-certs:/ssl-certs
       - ./data/acme.json:/acme.json
       - ./data/traefik.yml:/etc/traefik/traefik.yml:ro
       #- ./data/config.yml:/config.yml:ro
