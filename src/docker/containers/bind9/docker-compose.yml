@@ -12,9 +12,9 @@ services:
       macvlan255:
         ipv4_address: 10.0.255.24
     volumes:
-      - ns1_config:/etc/bind
-      - ns1_cache:/var/cache/bind
-      - ns1_records:/var/lib/bind
+      - ./ns1_config:/etc/bind
+      - ./ns1_cache:/var/cache/bind
+      - ./ns1_records:/var/lib/bind
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "named-checkconf"]
@@ -27,10 +27,10 @@ networks:
     name: macvlan255
     external: true
 
-volumes:
-  ns1_config:
-    external: true
-  ns1_cache:
-    external: true
-  ns1_records:
-    external: true
+#volumes:
+#  ns1_config:
+#    external: true
+#  ns1_cache:
+#    external: true
+#  ns1_records:
+#    external: true

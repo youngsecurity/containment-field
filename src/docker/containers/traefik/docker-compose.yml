@@ -13,9 +13,9 @@ services:
       #- "--certificatesresolvers.myresolver.acme.tlschallenge=true"
       #- "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
       #- "--certificatesresolvers.myresolver.acme.email=${EMAIL}"
-      #- "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"      
+      #- "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
     ports: # not required when using a MACVLAN
-      - "80:80"       # For HTTP (usually serves HTTP/1.1 traffic) 
+      - "80:80"       # For HTTP (usually serves HTTP/1.1 traffic)
       - "8080:8080"   # Web UI
       - "443:443/tcp" # For HTTPS (HTTP/2 or fallback to HTTP/1.1 via TLS over TCP)
       - "443:443/udp" # For HTTP/3 (which runs over QUIC using UDP)
@@ -35,9 +35,9 @@ services:
       - .env # use .env
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /etc/localtime:/etc/localtime:ro      
+      - /etc/localtime:/etc/localtime:ro
       - ./data/acme.json:/acme.json
-      - ./data/traefik.yml:/etc/traefik/traefik.yml:ro      
+      - ./data/traefik.yml:/etc/traefik/traefik.yml:ro
       #- ./data/config.yml:/config.yml:ro
     labels:
       - "traefik.enable=true"
@@ -51,7 +51,7 @@ services:
       - "traefik.http.routers.traefik-secure.rule=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_SECURE_RULE}"
       - "traefik.http.routers.traefik-secure.middlewares=traefik-auth"
       - "traefik.http.routers.traefik-secure.tls=true"
-      - "traefik.http.routers.traefik-secure.tls.certresolver=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_SECURE_TLS_CERTRESOLVER}"      
+      - "traefik.http.routers.traefik-secure.tls.certresolver=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_SECURE_TLS_CERTRESOLVER}"
       - "traefik.http.routers.traefik-secure.tls.domains[0].main=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_SECURE_TLS_DOMAINS_0_MAIN}"
       - "traefik.http.routers.traefik-secure.tls.domains[0].sans=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_SECURE_TLS_DOMAINS_0_SANS}"
       - "traefik.http.routers.traefik-secure.service=${TRAEFIK_HTTP_ROUTERS_TRAEFIK_SECURE_SERVICE}"
@@ -60,7 +60,7 @@ services:
     # A container that exposes an API to show its IP address
     image: traefik/whoami
     networks:
-      macvlan255:        
+      macvlan255:
     labels:
       - "traefik.http.routers.whoami.rule=Host(`whoami.home.youngsecurity.net`)"
 
