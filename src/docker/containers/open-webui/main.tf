@@ -55,23 +55,23 @@ resource "docker_container" "open-webui" {
     value = "true"
   }
   labels {
-    label="traefik.http.routers.open-webui.rule"
-    value="Host(`open-webui.home.youngsecurity.net`)"
+    label="traefik.http.routers.llm.rule"
+    value="Host(`llm.home.youngsecurity.net`) || Host(`llm.youngsecurity.net`)"
   }
   labels {
-    label="traefik.http.routers.open-webui.entrypoints"
+    label="traefik.http.routers.llm.entrypoints"
     value="websecure"
   }
   labels {
-    label="traefik.http.routers.open-webui.tls"
+    label="traefik.http.routers.llm.tls"
     value="true"
   }
   labels {
-    label="traefik.http.routers.open-webui.tls.certresolver"
+    label="traefik.http.routers.llm.tls.certresolver"
     value="cloudflare"
   }
   labels {
-    label="traefik.http.services.open-webui.loadbalancer.server.port"
+    label="traefik.http.services.llm.loadbalancer.server.port"
     value="8080"
   }
 

@@ -13,7 +13,7 @@ services:
       - TZ=US/New_York        
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.nginx-http.rule=Host(`nginx.home.youngsecurity.net`)"
+      - "traefik.http.routers.nginx-http.rule=Host(`nginx.home.youngsecurity.net`) || Host(`nginx.youngsecurity.net`)"
       - "traefik.http.middlewares.nginx-https-redirect.redirectscheme.scheme=https"      
       - "traefik.http.routers.nginx-http.middlewares=nginx-https-redirect"
       - "traefik.http.services.nginx-https.loadbalancer.server.port=8080"

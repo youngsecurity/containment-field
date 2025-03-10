@@ -1,7 +1,7 @@
 api:
-  dashboard: true  
-  debug: true
-  insecure: true
+  dashboard: true
+  #debug: true
+  #insecure: true
 entryPoints:
   web:
     address: ":80"
@@ -41,23 +41,21 @@ certificatesResolvers:
     acme:
       email: "redlinejoes.net@gmail.com"
       storage: "acme.json"
-      #caServer: https://acme-v02.api.letsencrypt.org/directory # prod (default)
-      caServer: https://acme-staging-v02.api.letsencrypt.org/directory # staging  
+      caServer: https://acme-v02.api.letsencrypt.org/directory # prod (default)
+      #caServer: https://acme-staging-v02.api.letsencrypt.org/directory # staging
       dnsChallenge:
         propagation:
           delayBeforeChecks: 2s
           #disableChecks: true
-          
+
         # used during the challenge
         provider: cloudflare
         resolvers:
           - "1.1.1.1:53"
           - "8.8.8.8:53"
-        #disablePropagationCheck: true
-        #delayBeforeCheck: 2s # uncomment along with disablePropagationCheck if needed to ensure the TXT record is ready before verification is attempted
 
 log:
-  level: "DEBUG"
+  level: "INFO"
   filePath: "/var/log/traefik/traefik.log"
   maxSize: 3
   maxBackups: 3

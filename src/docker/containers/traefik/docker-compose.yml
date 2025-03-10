@@ -4,13 +4,7 @@ services:
     image: traefik:v3.3.4
     container_name: tfk-01
     command:
-    ports: # not required when using a MACVLAN
-      - target: 80
-        published: 80
-        protocol: tcp        
-      - target: 443
-        published: 443
-        protocol: tcp              
+    #ports: # not required when using a MACVLAN
       #- "80:80"       # For HTTP (usually serves HTTP/1.1 traffic)
       #- "8080:8080"   # Web UI
       #- "443:443/tcp" # For HTTPS (HTTP/2 or fallback to HTTP/1.1 via TLS over TCP)
@@ -22,13 +16,13 @@ services:
       #proxy:
         #ipv4_address:
       macvlan255:
-        ipv4_address: 10.0.255.8      
+        ipv4_address: 10.0.255.8
     environment:
       - TZ=US/New_York
       - CF_DNS_API_TOKEN=${CF_DNS_API_TOKEN} # if using .env
       - TRAEFIK_DASHBOARD_CREDENTIALS=${TRAEFIK_DASHBOARD_CREDENTIALS}
     env_file:
-      - .env # use .env
+      - .env
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /etc/localtime:/etc/localtime:ro
@@ -41,7 +35,7 @@ services:
       - "traefik.http.routers.tfk-01.rule=Host(`tfk-01.home.youngsecurity.net`)"
       - "traefik.http.routers.tfk-01.service=api@internal"
       - "traefik.http.routers.tfk-01.middlewares=tfk-01-auth"
-      - "traefik.http.middlewares.tfk-01-auth.basicauth.users=${TRAEFIK_DASHBOARD_CREDENTIALS}"      
+      - "traefik.http.middlewares.tfk-01-auth.basicauth.users=${TRAEFIK_DASHBOARD_CREDENTIALS}"
       - "traefik.http.services.tfk-01.loadbalancer.server.port=8080"
 
   whoami:
@@ -62,10 +56,10 @@ services:
       #- traefik.http.routers.whoami.middlewares=wwwredirect-whoami
 
 networks:
-  #proxy:    
+  #proxy:
     #name: proxy
     #attachable: true
-    #external: true    
+    #external: true
   macvlan255:
     name: macvlan255
     attachable: true
