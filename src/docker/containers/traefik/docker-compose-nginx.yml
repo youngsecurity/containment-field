@@ -1,0 +1,25 @@
+services:
+  nginx:
+    image: nginxdemos/nginx-hello
+    networks:
+      macvlan255:
+        ipv4_address: 10.0.255.146
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.nginx.rule=Host(`nginx.home.youngsecurity.net`) #|| Host(`www.nginx.home.youngsecurity.net`)
+      - traefik.http.routers.nginx.tls=true
+      - traefik.http.routers.nginx.tls.certresolver=cloudflare
+      - traefik.http.routers.nginx.entrypoints=websecure
+      - traefik.http.services.nginx.loadbalancer.server.port=8080
+      - traefik.http.services.nginx.service=nginx
+
+
+      # Redirect www to non-www
+      #- traefik.http.middlewares.wwwredirect-nginx.redirectregex.regex=^https://www\.(.*)
+      #- traefik.http.middlewares.wwwredirect-nginx.redirectregex.replacement=https://$${1}
+      #- traefik.http.routers.nginx.middlewares=wwwredirect-nginx
+
+networks:
+  macvlan255:
+    name: macvlan255
+    external: true

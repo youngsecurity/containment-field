@@ -17,7 +17,7 @@ provider "docker" {
 
 # Pull the Docker image
 resource "docker_image" "open-webui" {
-  name = "ghcr.io/open-webui/open-webui:0.5.9"
+  name = "ghcr.io/open-webui/open-webui:0.5.20"
 }
 
 # Reference the existing external volume
@@ -50,6 +50,30 @@ resource "docker_container" "open-webui" {
   hostname = "open-webui"  
   gpus = "device=GPU-fcc90235-d4c3-65e4-f064-446367f1cb5c"
   tty = true
+  labels {    
+    label = "traefik.enable"
+    value = "true"
+  }
+  labels {
+    label="traefik.http.routers.open-webui.rule"
+    value="Host(`open-webui.home.youngsecurity.net`)"
+  }
+  labels {
+    label="traefik.http.routers.open-webui.entrypoints"
+    value="websecure"
+  }
+  labels {
+    label="traefik.http.routers.open-webui.tls"
+    value="true"
+  }
+  labels {
+    label="traefik.http.routers.open-webui.tls.certresolver"
+    value="cloudflare"
+  }
+  labels {
+    label="traefik.http.services.open-webui.loadbalancer.server.port"
+    value="8080"
+  }
 
   # Set environment variables
   env = [

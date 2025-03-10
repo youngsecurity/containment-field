@@ -3,15 +3,22 @@ api:
   debug: true
   insecure: true
 entryPoints:
-  http:
+  web:
     address: ":80"
     http:
       redirections:
         entryPoint:
-          to: https
+          to: websecure
           scheme: https
-  https:
+  websecure:
     address: ":443"
+    asDefault: true
+    http:
+      tls:
+        certResolver: cloudflare
+        domains:
+          - main: "youngsecurity.net"
+            sans: ["*.home.youngsecurity.net", "*.youngsecurity.net"]
 serversTransport:
   insecureSkipVerify: true
 
@@ -36,16 +43,23 @@ certificatesResolvers:
       #caServer: https://acme-v02.api.letsencrypt.org/directory # prod (default)
       caServer: https://acme-staging-v02.api.letsencrypt.org/directory # staging  
       dnsChallenge:
+        propagation:
+          delayBeforeChecks: 2s
+          #disableChecks: true
+          
         # used during the challenge
         provider: cloudflare
         resolvers:
           - "1.1.1.1:53"
           - "8.8.8.8:53"
         #disablePropagationCheck: true
-        delayBeforeCheck: 2s # uncomment along with disablePropagationCheck if needed to ensure the TXT record is ready before verification is attempted
+        #delayBeforeCheck: 2s # uncomment along with disablePropagationCheck if needed to ensure the TXT record is ready before verification is attempted
 
 log:
   level: "DEBUG"
   filePath: "/var/log/traefik/traefik.log"
+  maxSize: 3
+  maxBackups: 3
+  maxAge: 3
 accessLog:
-  filePath: "/var/log/traefik/access.log"  
+  filePath: "/var/log/traefik/access.log"

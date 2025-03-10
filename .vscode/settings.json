@@ -1,0 +1,6 @@
+{
+    "yaml.schemas": {        
+        "file:///home/devusr/.vscode-server/extensions/atlassian.atlascode-3.4.12/resources/schemas/pipelines-schema.json": "bitbucket-pipelines.yml",
+        "https://json.schemastore.org/traefik-v3.json": "file:///home/devusr/GitHub/containment-field/src/docker/containers/traefik/data/traefik.yml"
+    }
+}

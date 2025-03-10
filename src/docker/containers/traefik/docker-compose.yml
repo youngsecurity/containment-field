@@ -16,7 +16,7 @@ services:
       macvlan255:
         ipv4_address: 10.0.255.8
     environment:
-      #CF_DNS_API_TOKEN_FILE: /run/secrets/cf_api_token # note using _FILE for docker secrets
+      - TZ=US/New_York
       - CF_DNS_API_TOKEN=${CF_DNS_API_TOKEN} # if using .env
       - TRAEFIK_DASHBOARD_CREDENTIALS=${TRAEFIK_DASHBOARD_CREDENTIALS}
     env_file:
@@ -31,63 +31,45 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.tfk-01.rule=Host(`tfk-01.home.youngsecurity.net`)"
-      - "traefik.http.routers.tfk-01.tls=true"
-      - "traefik.http.routers.tfk-01-secure.tls.certresolver=cloudflare"
-      - "traefik.http.routers.tfk-01-secure.tls.domains[0].main=home.youngsecurity.net"
-      - "traefik.http.routers.tfk-01-secure.tls.domains[0].sans=*.home.youngsecurity.net"      
-      - "traefik.http.routers.tfk-01-secure.entrypoints=https"
-      - "traefik.http.routers.tfk-01-secure.rule=Host(`tfk-01.home.youngsecurity.net`)"
-      - "traefik.http.routers.tfk-01-secure.tls=true"
-      - "traefik.http.routers.tfk-01-secure.service=api@internal"
-      - "traefik.http.routers.tfk-01.middlewares=tfk-01-https-redirect"
+      - "traefik.http.routers.tfk-01.service=api@internal"
       - "traefik.http.routers.tfk-01.middlewares=tfk-01-auth"
-      - "traefik.http.middlewares.tfk-01-https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.middlewares.tfk-01-auth.basicauth.users=${TRAEFIK_DASHBOARD_CREDENTIALS}"
-      - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https"
+      - "traefik.http.middlewares.tfk-01-auth.basicauth.users=${TRAEFIK_DASHBOARD_CREDENTIALS}"      
       - "traefik.http.services.tfk-01.loadbalancer.server.port=8080"
 
-  whoami:
+  #whoami:
     # A container that exposes an API to show its IP address
-    image: traefik/whoami
-    networks:
-      macvlan255:
+   # image: traefik/whoami
+   # networks:
+   #   macvlan255:
         #ipv4_address: 10.0.255.156
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.whoami.rule=Host(`whoami.home.youngsecurity.net`)"
-      - "traefik.http.routers.whoami.tls=true"
-      - "traefik.http.routers.whoami.tls.certresolver=cloudflare"
-      - "traefik.http.routers.whoami-secure.tls.domains[0].main=home.youngsecurity.net"
-      - "traefik.http.routers.whoami-secure.tls.domains[0].sans=*.home.youngsecurity.net"
-      - "traefik.http.routers.whoami-secure.entrypoints=https"
-      - "traefik.http.routers.whoami-secure.rule=Host(`whoami.home.youngsecurity.net`)"
-      - "traefik.http.routers.whoami-secure.tls=true"
-      - "traefik.http.routers.whoami-secure.service=whoami"
-      - "traefik.http.routers.whoami.middlewares=whoami-https-redirect"
-      - "traefik.http.middlewares.whoami-https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https"      
-      - "traefik.http.services.whoami.loadbalancer.server.port=80"
+    #labels:
+      #- "traefik.enable=true"
+      #- "traefik.http.routers.whoami.rule=Host(`whoami.home.youngsecurity.net`) || Host(`www.whoami.home.youngsecurity.net`)"
+      #- "traefik.http.services.whoami.loadbalancer.server.port=80"
 
-  nginx:
-    image: nginxdemos/nginx-hello
-    networks:
-      macvlan255:
-        ipv4_address: 10.0.255.146
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.nginx.rule=Host(`nginx.home.youngsecurity.net`)"
-      - "traefik.http.routers.nginx.tls=true"
-      - "traefik.http.routers.nginx-secure.entrypoints=https"
-      - "traefik.http.routers.nginx-secure.rule=Host(`nginx.home.youngsecurity.net`)"
-      - "traefik.http.routers.nginx-secure.tls=true"
-      - "traefik.http.routers.nginx-secure.tls.certresolver=cloudflare"
-      - "traefik.http.routers.nginx-secure.tls.domains[0].main=home.youngsecurity.net"
-      - "traefik.http.routers.nginx-secure.tls.domains[0].sans=*.home.youngsecurity.net"
-      - "traefik.http.routers.nginx-secure.service=nginx"
-      - "traefik.http.routers.nginx.middlewares=nginx-https-redirect"
-      - "traefik.http.middlewares.nginx-https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https"      
-      - "traefik.http.services.nginx.loadbalancer.server.port=8080"      
+      # Redirect www to non-www
+      #- traefik.http.middlewares.wwwredirect-whoami.redirectregex.regex=^https://www\.(.*)
+      #- traefik.http.middlewares.wwwredirect-whoami.redirectregex.replacement=https://$${1}
+      #- traefik.http.routers.whoami.middlewares=wwwredirect-whoami
+
+  #nginx:
+    #image: nginxdemos/nginx-hello
+    #networks:
+    #  macvlan255:
+    #    ipv4_address: 10.0.255.146
+    #labels:
+      #- traefik.enable=true
+      #- traefik.http.routers.nginx.rule=Host(`nginx.home.youngsecurity.net`) || Host(`www.nginx.home.youngsecurity.net`)
+      #- traefik.http.routers.nginx.tls=true
+      #- traefik.http.routers.nginx.tls.certresolver=cloudflare
+      #- traefik.http.routers.nginx.entrypoints=websecure
+      #- traefik.http.services.nginx.loadbalancer.server.port=8080
+
+
+      # Redirect www to non-www
+      #- traefik.http.middlewares.wwwredirect-nginx.redirectregex.regex=^https://www\.(.*)
+      #- traefik.http.middlewares.wwwredirect-nginx.redirectregex.replacement=https://$${1}
+      #- traefik.http.routers.nginx.middlewares=wwwredirect-nginx
 
 networks:
   macvlan255:
