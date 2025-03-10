@@ -28,6 +28,7 @@ providers:
     #endpoint: "tcp://ignignokt.home.youngsecurity.net:2376"
     exposedByDefault: false
     network: macvlan255
+    #network: proxy
     #tls:
     #  ca: /home/devusr/.docker/ca-docker.pem
     #  cert: /home/devusr/.docker/client-docker-cert.pem # path to public cert used for secure connection to docker daemon
@@ -63,3 +64,4 @@ log:
   maxAge: 3
 accessLog:
   filePath: "/var/log/traefik/access.log"
+  format: "json"

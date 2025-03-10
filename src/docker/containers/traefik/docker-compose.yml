@@ -5,16 +5,24 @@ services:
     container_name: tfk-01
     command:
     ports: # not required when using a MACVLAN
-      - "80:80"       # For HTTP (usually serves HTTP/1.1 traffic)
-      - "8080:8080"   # Web UI
-      - "443:443/tcp" # For HTTPS (HTTP/2 or fallback to HTTP/1.1 via TLS over TCP)
-      - "443:443/udp" # For HTTP/3 (which runs over QUIC using UDP)
+      - target: 80
+        published: 80
+        protocol: tcp        
+      - target: 443
+        published: 443
+        protocol: tcp              
+      #- "80:80"       # For HTTP (usually serves HTTP/1.1 traffic)
+      #- "8080:8080"   # Web UI
+      #- "443:443/tcp" # For HTTPS (HTTP/2 or fallback to HTTP/1.1 via TLS over TCP)
+      #- "443:443/udp" # For HTTP/3 (which runs over QUIC using UDP)
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
     networks:
+      #proxy:
+        #ipv4_address:
       macvlan255:
-        ipv4_address: 10.0.255.8
+        ipv4_address: 10.0.255.8      
     environment:
       - TZ=US/New_York
       - CF_DNS_API_TOKEN=${CF_DNS_API_TOKEN} # if using .env
@@ -36,44 +44,31 @@ services:
       - "traefik.http.middlewares.tfk-01-auth.basicauth.users=${TRAEFIK_DASHBOARD_CREDENTIALS}"      
       - "traefik.http.services.tfk-01.loadbalancer.server.port=8080"
 
-  #whoami:
-    # A container that exposes an API to show its IP address
-   # image: traefik/whoami
-   # networks:
-   #   macvlan255:
-        #ipv4_address: 10.0.255.156
-    #labels:
-      #- "traefik.enable=true"
-      #- "traefik.http.routers.whoami.rule=Host(`whoami.home.youngsecurity.net`) || Host(`www.whoami.home.youngsecurity.net`)"
-      #- "traefik.http.services.whoami.loadbalancer.server.port=80"
+  whoami:
+    image: traefik/whoami
+    networks:
+      #proxy:
+        #ipv4_address:
+      macvlan255:
+        ipv4_address: 10.0.255.145
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=Host(`whoami.home.youngsecurity.net`)"
+      - "traefik.http.services.whoami.loadbalancer.server.port=80"
 
       # Redirect www to non-www
       #- traefik.http.middlewares.wwwredirect-whoami.redirectregex.regex=^https://www\.(.*)
       #- traefik.http.middlewares.wwwredirect-whoami.redirectregex.replacement=https://$${1}
       #- traefik.http.routers.whoami.middlewares=wwwredirect-whoami
 
-  #nginx:
-    #image: nginxdemos/nginx-hello
-    #networks:
-    #  macvlan255:
-    #    ipv4_address: 10.0.255.146
-    #labels:
-      #- traefik.enable=true
-      #- traefik.http.routers.nginx.rule=Host(`nginx.home.youngsecurity.net`) || Host(`www.nginx.home.youngsecurity.net`)
-      #- traefik.http.routers.nginx.tls=true
-      #- traefik.http.routers.nginx.tls.certresolver=cloudflare
-      #- traefik.http.routers.nginx.entrypoints=websecure
-      #- traefik.http.services.nginx.loadbalancer.server.port=8080
-
-
-      # Redirect www to non-www
-      #- traefik.http.middlewares.wwwredirect-nginx.redirectregex.regex=^https://www\.(.*)
-      #- traefik.http.middlewares.wwwredirect-nginx.redirectregex.replacement=https://$${1}
-      #- traefik.http.routers.nginx.middlewares=wwwredirect-nginx
-
 networks:
+  #proxy:    
+    #name: proxy
+    #attachable: true
+    #external: true    
   macvlan255:
     name: macvlan255
+    attachable: true
     external: true
 
 #volumes:
