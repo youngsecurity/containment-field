@@ -15,7 +15,6 @@ resource "dns_a_record_set" "open-webui" {
     ]
     ttl = 30
 }
-
 resource "dns_a_record_set" "ollama" {
     zone = "home.youngsecurity.net."
     name = "ollama"
@@ -42,4 +41,16 @@ resource "dns_cname_record" "llm" {
     name = "llm"
     cname = "tfk-01.home.youngsecurity.net."
     ttl = 30
+}
+resource "dns_cname_record" "pihole" {
+    zone = "home.youngsecurity.net."
+    name = "pihole"
+    cname = "tfk-01.home.youngsecurity.net."
+    ttl = 30  
+}
+resource "dns_cname_record" "portainer" {
+    zone = "home.youngsecurity.net."
+    name = "portainer"
+    cname = "tfk-01.home.youngsecurity.net."
+    ttl = 30  
 }

@@ -1,7 +1,7 @@
 services:
   pihole:
     container_name: pihole
-    image: pihole/pihole:2024.07.0    
+    image: pihole/pihole:2024.07.0
     environment:
       #WEBPASSWORD: "set a secure password here or it will be random"
       - TZ=America/New_York
@@ -14,7 +14,7 @@ services:
     #  - "81:80/tcp"
     networks:
       macvlan255:
-        ipv4_address: 10.0.255.155      
+        ipv4_address: 10.0.255.155
     volumes:
       - pihole_etc:/etc/pihole
       - pihole_etc_dnsmasq.d:/etc/dnsmasq.d

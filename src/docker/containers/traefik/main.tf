@@ -8,10 +8,10 @@ terraform {
 }
 provider "docker" {
   # Configuration options  
-  host = "${DOCKER_HOST}"
-  ca_material   = "${CA_MATERIAL}"
-  cert_material = "${CERT_MATERIAL}"
-  key_material  = "${KEY_MATERIAL}"
+  #host = ${DOCKER_HOST}
+  #ca_material   = ${CA_MATERIAL}
+  #cert_material = ${CERT_MATERIAL}
+  #key_material  = ${KEY_MATERIAL}
 }
 
 # Pull the Docker image
