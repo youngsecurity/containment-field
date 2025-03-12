@@ -1,4 +1,4 @@
-terraform {  
+terraform {
   required_providers {
     docker = {
       source = "kreuzwerker/docker"
@@ -7,7 +7,7 @@ terraform {
   }
 }
 provider "docker" {
-  # Configuration options  
+  # Configuration options
   #host = ${DOCKER_HOST}
   #ca_material   = ${CA_MATERIAL}
   #cert_material = ${CERT_MATERIAL}
@@ -22,7 +22,7 @@ resource "docker_image" "traefik:v3.3.4" {
 # Reference the existing external volume(s)
 resource "docker_volume" "tfk-01" {
   name = "tfk-01"
-  
+
   lifecycle {
     prevent_destroy = true
   }
@@ -30,7 +30,7 @@ resource "docker_volume" "tfk-01" {
 
 resource "docker_volume" "tfk-01" {
   name = "tfk-01"
-  
+
   lifecycle {
     prevent_destroy = true
   }
@@ -47,11 +47,11 @@ resource "docker_network" "macvlan255" {
 }
 
 data "docker_network" "macvlan255" {
-  name = "macvlan255"  
+  name = "macvlan255"
 }
 
 # Create the Docker container
-resource "docker_container" "tfk-01" {  
+resource "docker_container" "tfk-01" {
   image = docker_image.tfk-01.image_id
   name  = "tfk-01"
   hostname = "tfk-01"
