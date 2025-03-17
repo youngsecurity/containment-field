@@ -38,17 +38,17 @@ services:
       - "traefik.http.middlewares.tfk-01-auth.basicauth.users=${TRAEFIK_DASHBOARD_CREDENTIALS}"
       - "traefik.http.services.tfk-01.loadbalancer.server.port=8080"
 
-  whoami:
-    image: traefik/whoami
-    networks:
+  #whoami:
+  #  image: traefik/whoami
+  #  networks:
       #proxy:
         #ipv4_address:
-      macvlan255:
-        ipv4_address: 10.0.255.145
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.whoami.rule=Host(`whoami.home.youngsecurity.net`)"
-      - "traefik.http.services.whoami.loadbalancer.server.port=80"
+  #    macvlan255:
+  #      ipv4_address: 10.0.255.145
+  #  labels:
+  #    - "traefik.enable=true"
+  #    - "traefik.http.routers.whoami.rule=Host(`whoami.home.youngsecurity.net`)"
+  #    - "traefik.http.services.whoami.loadbalancer.server.port=80"
 
       # Redirect www to non-www
       #- traefik.http.middlewares.wwwredirect-whoami.redirectregex.regex=^https://www\.(.*)

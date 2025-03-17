@@ -3,11 +3,12 @@ services:
     image: dockurr/windows
     container_name: windows
     environment:
-      VERSION: "win11e"
-      DISK_SIZE: "64G"
+      VERSION: "7e"
+      DISK_SIZE: "10G"
       CPU_CORES: "4"
-      RAM_SIZE: "8G"
+      RAM_SIZE: "4G"
       DHCP: "Y" # required for DHCP
+      TZ: "US/New_York"
     device_cgroup_rules: # required for DHCP
       - 'c *:* rwm' # required for DHCP
     devices:
@@ -23,7 +24,15 @@ services:
     stop_grace_period: 2m
     volumes:
       - windows:/storage
-      - /home/devusr/:/shared
+      #- /home/devusr/:/shared
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.wod.rule=Host(`wod.home.youngsecurity.net`) || Host(`wod.youngsecurity.net`)"
+      - "traefik.http.routers.wod.entrypoints=websecure"
+      - "traefik.http.routers.wod.tls=true"
+      - "traefik.http.routers.wod.tls.certresolver=cloudflare"
+      - "traefik.http.services.wod.loadbalancer.server.port=8006"
+
     networks:
       macvlan255:
         ipv4_address: 10.0.255.154
@@ -33,7 +42,7 @@ services:
           devices:
           - driver: nvidia
             device_ids: ['0']
-            capabilities: [gpu]  
+            capabilities: [gpu]
 
 networks:
   macvlan255:
