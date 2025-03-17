@@ -59,3 +59,9 @@ resource "dns_cname_record" "wod" {
     cname = "tfk-01.home.youngsecurity.net."
     ttl = 30  
 }
+resource "dns_cname_record" "cdi" {
+    zone = "home.youngsecurity.net."
+    name = "cdi"
+    cname = "tfk-01.home.youngsecurity.net."
+    ttl = 30  
+}
