@@ -6,6 +6,14 @@ resource "dns_a_record_set" "tfk-01" {
     ]
     ttl = 30
 }
+resource "dns_a_record_set" "kali" {
+    zone = "home.youngsecurity.net."
+    name = "kali"
+    addresses = [
+        "10.0.255.150"
+    ]
+    ttl = 30
+}
 resource "dns_a_record_set" "metasploit" {
     zone = "home.youngsecurity.net."
     name = "metasploit"
