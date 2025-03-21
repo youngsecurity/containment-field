@@ -6,6 +6,14 @@ resource "dns_a_record_set" "tfk-01" {
     ]
     ttl = 30
 }
+resource "dns_a_record_set" "metasploit" {
+    zone = "home.youngsecurity.net."
+    name = "metasploit"
+    addresses = [
+        "10.0.255.149"
+    ]
+    ttl = 30
+}
 resource "dns_a_record_set" "open-webui" {
     zone = "home.youngsecurity.net."
     name = "open-webui"

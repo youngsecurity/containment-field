@@ -1,0 +1,24 @@
+services:
+  metasploit:
+    image: metasploitframework/metasploit-framework
+    container_name: metasploit
+    tty: true
+    stdin_open: true
+    #ports:
+    networks:
+      macvlan255:
+        ipv4_address: 10.0.255.149
+    environment:
+      - TZ=US/New_York
+    volumes:
+      - metasploit:/root/msf/.msf4
+    restart: unless-stopped
+
+networks:
+  macvlan255:
+    name: macvlan255
+    external: true
+
+volumes:
+  metasploit:
+    external: true
