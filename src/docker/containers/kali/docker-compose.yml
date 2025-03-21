@@ -3,33 +3,17 @@ services:
     container_name: kali
     image: kalilinux/kali-rolling
     tty: true
-    stdin_open: true    
-    environment:      
+    stdin_open: true
+    environment:
       - TZ=America/New_York
     #ports: # not required when using a MACVLAN
     networks:
       macvlan255:
         ipv4_address: 10.0.255.150
     #volumes:
-      #- ns1_config:/etc/bind
-      #- ns1_cache:/var/cache/bind
-      #- ns1_records:/var/lib/bind
     restart: unless-stopped
-    #healthcheck:
-    #  test: ["CMD", "named-checkconf"]
-    #  interval: 30s
-    #  timeout: 10s
-    #  retries: 3    
 
 networks:
   macvlan255:
     name: macvlan255
     external: true
-
-#volumes:
-#  ns1_config:
-#    external: true
-#  ns1_cache:
-#    external: true
-#  ns1_records:
-#    external: true
