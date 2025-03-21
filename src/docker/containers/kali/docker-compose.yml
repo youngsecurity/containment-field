@@ -6,6 +6,8 @@ services:
     stdin_open: true
     environment:
       - TZ=America/New_York
+    cap_add:
+      - NET_ADMIN
     #ports: # not required when using a MACVLAN
     networks:
       macvlan255:
