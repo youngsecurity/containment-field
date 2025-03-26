@@ -11,7 +11,7 @@ subnet="10.6.0.0/17"
 gatewayIP="10.6.0.1"
 #localDNS="10.0.255.24/32"
 netName="vpnvlan"
-netType="macvlan" # choose from bridge, host, overlay, macvlan, none, custom
+netType="bridge" # choose from bridge, host, overlay, macvlan, none, custom
 #auxAddress1="network-address=10.0.255.144"
 #auxAddress2="broadcast-address=10.0.255.159"
 
@@ -25,10 +25,10 @@ function deploy_Macvlan() {
         $netName
 }
 
-#function deploy_Bridge() {
-#    sudo ip link add "$netName" link "$infName" type "$netType" mode bridge    
-#    sudo ip link set "$netName" up
-#}
+function deploy_Bridge() {
+    sudo ip link add "$netName" link "$infName" type "$netType" mode bridge    
+    sudo ip link set "$netName" up
+}
 
 # Main code
 # Notify the user the script has started.

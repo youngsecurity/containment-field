@@ -32,8 +32,10 @@ services:
       - "traefik.http.routers.wod.tls=true"
       - "traefik.http.routers.wod.tls.certresolver=cloudflare"
       - "traefik.http.services.wod.loadbalancer.server.port=8006"
+    restart: unless-stopped
 
     networks:
+      proxy:
       macvlan255:
         ipv4_address: 10.0.255.154
     deploy: # required for GPU assignment
@@ -45,6 +47,9 @@ services:
             capabilities: [gpu]
 
 networks:
+  proxy:
+    name: proxy
+    external: true
   macvlan255:
     name: macvlan255
     external: true

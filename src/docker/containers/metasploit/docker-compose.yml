@@ -4,10 +4,7 @@ services:
     container_name: metasploit
     tty: true
     stdin_open: true
-    ports:
-      - "8080:80"
     networks:
-      tun0:        
       macvlan255:
         ipv4_address: 10.0.255.149
     environment:
@@ -17,9 +14,6 @@ services:
     restart: unless-stopped
 
 networks:
-  tun0:
-    name: tun0
-    external: true
   macvlan255:
     name: macvlan255
     external: true
