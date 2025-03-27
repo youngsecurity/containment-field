@@ -36,7 +36,12 @@ services:
 
     networks:
       proxy:
+        aliases:
+          - windows-proxy
+        ipv4_address: 172.18.0.3
       macvlan255:
+        aliases:
+          - windows-macvlan255
         ipv4_address: 10.0.255.154
     deploy: # required for GPU assignment
       resources:
@@ -50,6 +55,10 @@ networks:
   proxy:
     name: proxy
     external: true
+    ipam:
+      config:
+        - subnet: "172.18.0.0/16"
+          gateway: 172.18.0.1
   macvlan255:
     name: macvlan255
     external: true
