@@ -8,7 +8,7 @@ services:
       CPU_CORES: "4"
       RAM_SIZE: "4G"
       DHCP: "Y" # required for DHCP
-      TZ: "US/New_York"
+      TZ: "US/New_York"            
     device_cgroup_rules: # required for DHCP
       - 'c *:* rwm' # required for DHCP
     devices:
