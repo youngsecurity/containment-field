@@ -17,7 +17,7 @@ provider "docker" {
 
 # Pull the Docker image
 resource "docker_image" "open-webui" {
-  name = "ghcr.io/open-webui/open-webui:0.5.20"
+  name = "ghcr.io/open-webui/open-webui:0.6.5"
 }
 
 # Reference the existing external volume

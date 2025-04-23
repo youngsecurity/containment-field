@@ -18,7 +18,7 @@ provider "docker" {
 
 # Pull the Docker image
 resource "docker_image" "ollama" {
-  name = "ollama/ollama:0.5.8-rc6"
+  name = "ollama/ollama:0.6.5"
 }
 
 #data "docker_image" "2ddc32d" {
