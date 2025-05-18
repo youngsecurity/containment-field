@@ -17,7 +17,7 @@ provider "docker" {
 
 # Pull the Docker image
 resource "docker_image" "open-webui" {
-  name = "ghcr.io/open-webui/open-webui:0.6.5"
+  name = "ghcr.io/open-webui/open-webui:0.6.9"
 }
 
 # Reference the existing external volume
@@ -79,6 +79,7 @@ resource "docker_container" "open-webui" {
   env = [
     "TZ=America/New_York",
     "OLLAMA_BASE_URL=http://ollama:11434",
+    "GLOBAL_LOG_LEVEL=DEBUG",
   ]
 
   # Mount the external volume
